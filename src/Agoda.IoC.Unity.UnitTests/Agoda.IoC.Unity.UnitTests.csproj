@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Agoda.IoC.Core\Agoda.IoC.Core.csproj" />
+    <ProjectReference Include="..\Agoda.IoC.Unity\Agoda.IoC.Unity.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid10\Agoda.IoC.ProjectUnderTest.Invalid10.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid11\Agoda.IoC.ProjectUnderTest.Invalid11.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid12\Agoda.IoC.ProjectUnderTest.Invalid12.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid13\Agoda.IoC.ProjectUnderTest.Invalid13.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid14\Agoda.IoC.ProjectUnderTest.Invalid14.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid15\Agoda.IoC.ProjectUnderTest.Invalid15.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid16\Agoda.IoC.ProjectUnderTest.Invalid16.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid17\Agoda.IoC.ProjectUnderTest.Invalid17.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid18\Agoda.IoC.ProjectUnderTest.Invalid18.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid1\Agoda.IoC.ProjectUnderTest.Invalid1.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid2\Agoda.IoC.ProjectUnderTest.Invalid2.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid3\Agoda.IoC.ProjectUnderTest.Invalid3.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid4\Agoda.IoC.ProjectUnderTest.Invalid4.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid5\Agoda.IoC.ProjectUnderTest.Invalid5.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid6\Agoda.IoC.ProjectUnderTest.Invalid6.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid7\Agoda.IoC.ProjectUnderTest.Invalid7.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid8\Agoda.IoC.ProjectUnderTest.Invalid8.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Invalid9\Agoda.IoC.ProjectUnderTest.Invalid9.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid\Agoda.IoC.ProjectUnderTest.Valid.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Agoda.Analyzers" Version="1.0.504">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="CompareNETObjects" Version="4.63.0" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.9" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.22" />
+  </ItemGroup>
+</Project>

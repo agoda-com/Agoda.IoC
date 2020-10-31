@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{27499321-1F96-4580-91E6-6A29140D8955}</ProjectGuid>
+    <RootNamespace>Agoda.IoC.ProjectUnderTest.Invalid9</RootNamespace>
+    <AssemblyName>Agoda.IoC.ProjectUnderTest.Invalid9</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyTitle>Agoda.IoC.ProjectUnderTest.Invalid9</AssemblyTitle>
+    <Product>Agoda.IoC.ProjectUnderTest.Invalid9</Product>
+    <Copyright>Copyright ©  2018</Copyright>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Agoda.IoC.Core\Agoda.IoC.Core.csproj" />
+  </ItemGroup>
+</Project>
