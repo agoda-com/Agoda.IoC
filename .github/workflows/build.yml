@@ -44,7 +44,7 @@ jobs:
     - name: Publish artifact
       uses: actions/upload-artifact@master
       with:
-        name: nupkg.zip
+        name: nupkg
         path: ${{ env.GIT_REPO_ROOT }}/finalpackage
 
   deploy:
@@ -56,7 +56,7 @@ jobs:
       - name: Download Package artifact
         uses: actions/download-artifact@master
         with:
-          name: nupkg.zip
+          name: nupkg
           path: ./nupkg
 
       - name: Setup NuGet

@@ -41,7 +41,7 @@ namespace Agoda.IoC.NetCore
                     : reg.ToType;
                 // Set up supporting registrations.
                 // Collections is not included here as its supported in netcore ootb
-                // keyed instances not included as its not supported
+                // keyed instances not included as its not supported in netcore
                 if (reg.FactoryType != null)
                 {
                     services.Add(new ServiceDescriptor(reg.FromType, (x) =>
