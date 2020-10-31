@@ -1,7 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+      <TargetFramework>netstandard2.0</TargetFramework>
+      <PackageId>Agoda.IoC.Core</PackageId>
+      <Title>Agoda IoC</Title>
+      <Authors>Joel Dickson, Michael Chamberlian </Authors>
+      <RepositoryUrl>https://github.com/agoda-com/Agoda.IoC</RepositoryUrl>
+      <PackageTags>Dependency Injection;IoC;Agoda</PackageTags>
+      <PackageLicenseUrl></PackageLicenseUrl>
+      <Copyright>Copyright © Agoda 2020</Copyright>
+      <Description>Share dotnet C# IoC implementation, used at Agoda.</Description>
+      <IsPackable>true</IsPackable>
   </PropertyGroup>
 
 </Project>

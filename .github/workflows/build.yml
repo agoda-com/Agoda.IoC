@@ -1,4 +1,4 @@
-name: .NET Core Build and Deploy
+name: .NET Core Build and Publish
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: "Setup .NET Core SDK ${{ env.NETCORE_VERSION }}"
+    - name: Setup .NET Core SDK ${{ env.NETCORE_VERSION }}
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
@@ -45,11 +45,11 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: nupkg
-        path: finalpackage
+        path: ${{ env.GIT_REPO_ROOT }}/finalpackage
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     name: Deploy Packages
     runs-on: ubuntu-latest
     steps:

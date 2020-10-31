@@ -8,6 +8,7 @@
     <AssemblyTitle>Agoda.IoC.ProjectUnderTest.Invalid4</AssemblyTitle>
     <Product>Agoda.IoC.ProjectUnderTest.Invalid4</Product>
     <Copyright>Copyright ©  2018</Copyright>
+<IsPackable>false</IsPackable>
     <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
