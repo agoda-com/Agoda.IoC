@@ -10,6 +10,7 @@ on:
 
 env:
   NETCORE_VERSION: '3.1.402'  
+  GIT_REPO_ROOT: src
 
 jobs:
 #================================================================================================
@@ -17,7 +18,7 @@ jobs:
 #================================================================================================
     build:
         name: Build, Unit Test and Publish Client
-        runs-on: [self-hosted, linux, x64]
+        runs-on: windows-latest
         steps:
         - uses: actions/checkout@v2
         - name: Setup .NET Core SDK ${{ env.NETCORE_VERSION }}
@@ -25,3 +26,5 @@ jobs:
           with:
             dotnet-version: ${{ env.NETCORE_VERSION }}
         - name: Restore packages     
+          working-directory: ${{ env.GIT_REPO_ROOT }}
+          run: dotnet restore 
