@@ -164,23 +164,6 @@ namespace Agoda.IoC.ProjectUnderTest.Valid
         }
     }
     
-    // testing interceptors
-    
-    public interface ICachedClass
-    {
-        DateTime GetCurrentTime();
-    }
-    
-    public interface ICachedClassWithFactory
-    {
-        DateTime GetCurrentTime();
-        int Something { get; }
-    }
-    
-    public interface IMultipleInterceptors
-    {
-        DateTime GetCurrentTime();
-    }
     
     // testing multiple attributes
     
@@ -263,8 +246,4 @@ namespace Agoda.IoC.ProjectUnderTest.Valid
         public string BuiltBy { get; set; }
     }
     
-    public interface IGenericCachedClassWithFactory<out T>
-    {
-        double GetRandom();
-    }
 }
