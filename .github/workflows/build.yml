@@ -39,7 +39,7 @@ jobs:
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     name: Deploy Packages
     runs-on: ubuntu-latest
     steps:
