@@ -1,30 +1,64 @@
-name: "Build Test and Pub"
+name: .NET Core Build and Deploy
 
 on:
   push:
-    branches:
-      - master
+    branches: main
   pull_request:
-    branches:
-    - master     
-
-env:
-  NETCORE_VERSION: '3.1.402'  
-  GIT_REPO_ROOT: src
+    branches: main
 
 jobs:
-#================================================================================================
-#=========================== Build, Unit Test, Gen and Publish Client ===========================
-#================================================================================================
-    build:
-        name: Build, Unit Test and Publish Client
-        runs-on: windows-latest
-        steps:
-        - uses: actions/checkout@v2
-        - name: Setup .NET Core SDK ${{ env.NETCORE_VERSION }}
-          uses: actions/setup-dotnet@v1
-          with:
-            dotnet-version: ${{ env.NETCORE_VERSION }}
-        - name: Restore packages     
-          working-directory: ${{ env.GIT_REPO_ROOT }}
-          run: dotnet restore 
+  build:
+    name: Build Package 
+    runs-on: windows-latest # using windows agent for net462 build.
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    # Run the tests, ideally should stop here if a fail and also publish results as artifacts
+    - name: Test
+      run: dotnet test
+
+    - name: Pack
+      run: dotnet pack --configuration Release -o finalpackage --no-build
+
+    - name: Publish artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: nupkg
+        path: finalpackage
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    name: Deploy Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Package artifact
+        uses: actions/download-artifact@master
+        with:
+          name: nupkg
+          path: ./nupkg
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.2
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-version: latest
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
+
+      - name: Push to NuGet
+        run: dotnet nuget push nupkg/**/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://nuget.org --skip-duplicate
