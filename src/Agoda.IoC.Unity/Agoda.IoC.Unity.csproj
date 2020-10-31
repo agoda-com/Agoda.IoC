@@ -2,7 +2,7 @@
 
   <PropertyGroup>
       <TargetFramework>net472</TargetFramework>
-      <PackageId>Agoda.IoC.Core</PackageId>
+      <PackageId>Agoda.IoC.Unity</PackageId>
       <Title>Agoda IoC</Title>
       <Authors>Joel Dickson, Michael Chamberlian </Authors>
       <RepositoryUrl>https://github.com/agoda-com/Agoda.IoC</RepositoryUrl>
