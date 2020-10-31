@@ -6,30 +6,40 @@ on:
   pull_request:
     branches: main
 
+env:
+  NETCORE_VERSION: '3.1.402'  
+  GIT_REPO_ROOT: src
+  MAJOR_MINOR_VERSION: 1.1.
+  SOLUTION_FILE: Agoda.IoC.sln
+
 jobs:
   build:
     name: Build Package 
     runs-on: windows-latest # using windows agent for net462 build.
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup .NET Core SDK
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core SDK ${{ env.NETCORE_VERSION }}
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.100
+        dotnet-version: ${{ env.NETCORE_VERSION }}
 
     - name: Restore
-      run: dotnet restore
+      working-directory: ${{ env.GIT_REPO_ROOT }}        
+      run: dotnet restore ${{ env.SOLUTION_FILE }}
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      working-directory: ${{ env.GIT_REPO_ROOT }}        
+      run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
     # Run the tests, ideally should stop here if a fail and also publish results as artifacts
     - name: Test
+      working-directory: ${{ env.GIT_REPO_ROOT }}        
       run: dotnet test
 
     - name: Pack
-      run: dotnet pack --configuration Release -o finalpackage --no-build
+      working-directory: ${{ env.GIT_REPO_ROOT }}    
+      run: dotnet pack ${{ env.SOLUTION_FILE }} --configuration Release -o finalpackage --no-build -version ${{ env.MAJOR_MINOR_VERSION }}${{ github.run_number }}
 
     - name: Publish artifact
       uses: actions/upload-artifact@master
@@ -39,7 +49,7 @@ jobs:
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     name: Deploy Packages
     runs-on: ubuntu-latest
     steps:
@@ -58,7 +68,7 @@ jobs:
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.100
+          dotnet-version: ${{ env.NETCORE_VERSION }}
 
       - name: Push to NuGet
         run: dotnet nuget push nupkg/**/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://nuget.org --skip-duplicate
