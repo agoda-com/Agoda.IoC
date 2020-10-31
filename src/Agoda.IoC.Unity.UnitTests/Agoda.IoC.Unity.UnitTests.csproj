@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -42,5 +42,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
     <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.22" />
+    <PackageReference Include="Unity" Version="3.5.1404" />
   </ItemGroup>
 </Project>
