@@ -23,18 +23,3 @@ jobs:
     - name: Restore
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-
-    # Run the tests, ideally should stop here if a fail and also publish results as artifacts
-    - name: Test
-      run: dotnet test
-
-    - name: Pack
-      run: dotnet pack --configuration Release -o finalpackage --no-build
-
-    - name: Publish artifact
-      uses: actions/upload-artifact@master
-      with:
-        name: nupkg
-        path: finalpackage
