@@ -1,4 +1,4 @@
-name: .NET Core Build and Deploy
+name: "Build Test and Pub"
 
 on:
   push:
@@ -8,18 +8,20 @@ on:
     branches:
     - master     
 
+env:
+  NETCORE_VERSION: '3.1.402'  
+
 jobs:
-  build:
-    name: Build Package 
-    runs-on: windows-latest # using windows agent for net462 build.
-
-    steps:
-    - uses: actions/checkout@v1
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.100
-
-    - name: Restore
-      run: dotnet restore
-
+#================================================================================================
+#=========================== Build, Unit Test, Gen and Publish Client ===========================
+#================================================================================================
+    build:
+        name: Build, Unit Test and Publish Client
+        runs-on: [self-hosted, linux, x64]
+        steps:
+        - uses: actions/checkout@v2
+        - name: Setup .NET Core SDK ${{ env.NETCORE_VERSION }}
+          uses: actions/setup-dotnet@v1
+          with:
+            dotnet-version: ${{ env.NETCORE_VERSION }}
+        - name: Restore packages     
