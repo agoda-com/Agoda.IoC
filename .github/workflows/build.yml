@@ -15,7 +15,7 @@ env:
 jobs:
   build:
     name: Build Package 
-    runs-on: windows-latest # using windows agent for net462 build.
+    runs-on: windows-latest # using windows agent for net472 build.
 
     steps:
     - uses: actions/checkout@v2
@@ -32,10 +32,9 @@ jobs:
       working-directory: ${{ env.GIT_REPO_ROOT }}        
       run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
-    # Run the tests, ideally should stop here if a fail and also publish results as artifacts
     - name: Test
       working-directory: ${{ env.GIT_REPO_ROOT }}        
-      run: dotnet test
+      run: dotnet test ${{ env.UNITTEST_PROJECT_PATH }} --no-build --collect:"XPlat Code Coverage" --logger GitHubActions
 
     - name: Pack
       working-directory: ${{ env.GIT_REPO_ROOT }}    
@@ -46,6 +45,11 @@ jobs:
       with:
         name: nupkg
         path: ${{ env.GIT_REPO_ROOT }}/finalpackage
+
+    - uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage.xml # optional
+        fail_ci_if_error: true # optional (default = false)
 
   deploy:
     needs: build

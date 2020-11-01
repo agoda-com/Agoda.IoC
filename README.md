@@ -1,4 +1,4 @@
-# Agoda IoC
+# Agoda IoC Extensions 
 
 Share dotnet C# IoC implementation, used at Agoda for Registration of classes into IoC container based on Attributes. 
 
@@ -9,7 +9,6 @@ Install the package, then add to your startup.cs class
 ```powershell
 Install-Package Agoda.IoC.NetCore
 ```
-
 
 ```csharp
         public void ConfigureServices(IServiceCollection services)
@@ -22,7 +21,7 @@ You need to pass in an array of all the assemblies you want to scan in your proj
 
 ## Usage in your project
 
-The basic usage of this project allow you to use 3 core attibutes on your classes (RegisterTransient, RegisterPerRequest, RegisterSingleton) like the following code
+The basic usage of this project allow you to use 3 core attributes on your classes (RegisterTransient, RegisterPerRequest, RegisterSingleton) like the following code
 
 ```csharp
 
@@ -86,10 +85,6 @@ Below example demonstrates using attributes to indicate a mock option for a regi
 
 ```
 
-## Development Setup
-
-TBD
-
 ## Dedication
 
-TBD
+A large amount of the code in this repository was written by Micheal Alastair Chamberlain who is no longer with us, so it is with this community contribution we remember him.

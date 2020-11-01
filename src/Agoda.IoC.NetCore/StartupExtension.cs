@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Agoda.IoC.NetCore
 {
-    public static class StartupExtenstion
+    public static class StartupExtension
     {
         public static IServiceCollection AutoWireAssembly(this IServiceCollection services, Assembly[] assemblies,
              bool isMockMode)

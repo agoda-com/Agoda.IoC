@@ -18,6 +18,12 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Agoda.Analyzers" Version="1.0.504">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Agoda.IoC.Core\Agoda.IoC.Core.csproj" />
   </ItemGroup>
 </Project>
