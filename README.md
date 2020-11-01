@@ -97,7 +97,3 @@ Below example demonstrates using attributes to indicate a mock option for a regi
 ## A Unity 3.5 Project?
 
 Some of the old legacy systems at Agoda run an old version of unity, and this library was originally developed against that. These days every thing is moving towards net core, but we still decided to publish the original unity library as well.
-
-## Dedication
-
-A large amount of the code in this repository was written by Micheal Alastair Chamberlain who is no longer with us, so it is with this community contribution we remember him.
