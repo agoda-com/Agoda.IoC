@@ -7,13 +7,13 @@ Share dotnet C# IoC implementation, used at Agoda for Registration of classes in
 
 ## The Problem?
 
-Mostly in our larger projects at Agoda, teh Dependency inject registration was done in a single or set of "configuration" classes, these large configuration type files are troublesome due to frequency of merge conflicts. Also to look at a normal class and know if it will be run as a singleton or transient you need to dig into these configuration classes.
+In some of our larger projects at Agoda, the Dependency injection registration was done in a single or set of "configuration" classes. These large configuration type files are troublesome due to frequency of merge conflicts. Also to look at a normal class and know if it will be run as a singleton or transient you need to dig into these configuration classes.
 
-By declaring the IoC configuration at the top of each class it makes it immediately clear to the developer how the class's lifecycle is when running, and avoids large complex configuration classes.
+By declaring the IoC configuration at the top of each class in an attribute it makes it immediately clear to the developer what the class's lifecycle is when running, and avoids large complex configuration classes that are prone to merge conflcits.
 
 ## Adding to your project
 
-Install the package, then add to your startup.cs class
+Install the package, then add to your Startup like below.
 
 ```powershell
 Install-Package Agoda.IoC.NetCore
@@ -26,11 +26,11 @@ Install-Package Agoda.IoC.NetCore
         }
 ```
 
-You need to pass in an array of all the assemblies you want to scan in your project for registration. As well as a boolean indicating if you applcaiiton is running in Mocked mode or not.
+You need to pass in an array of all the assemblies you want to scan in your project for registration. As well as a boolean indicating if you applcation is running in Mocked mode or not.
 
 ## Usage in your project
 
-The basic usage of this project allow you to use 3 core attributes on your classes (RegisterTransient, RegisterPerRequest, RegisterSingleton) like the following code
+The basic usage of this project allow you to use 3 core attributes on your classes (RegisterTransient, RegisterPerRequest, RegisterSingleton) like the following code:
 
 ```csharp
 
@@ -67,7 +67,7 @@ For services with multiple interfaces the interface can be explicitly declared l
     [RegisterTransient(For = typeof(IExplicitlyRegisteredInterface))]
     public class ServiceWithExplicitInterfaceRegistration : IExplicitlyRegisteredInterface, IInterfaceThatShouldNotGetRegistered {}
 ```
-Cas also be used to register multiple instances
+It can also be used to register multiple instances
 
 ```csharp
 
@@ -80,7 +80,7 @@ And may more options...
 
 ## Mocked Mode?
 
-Mocked mode is used for mocking external dependencies, this should be used on repositories that access a database for example. so you can run system tests on your application without the need for external dependencies.
+Mocked mode is used for mocking external dependencies, this should be used on repository type classes that access a database for example. so you can run system tests on your application without the need for external dependencies.
 
 Below example demonstrates using attributes to indicate a mock option for a registration.
 
@@ -97,3 +97,9 @@ Below example demonstrates using attributes to indicate a mock option for a regi
 ## A Unity 3.5 Project?
 
 Some of the old legacy systems at Agoda run an old version of unity, and this library was originally developed against that. These days every thing is moving towards net core, but we still decided to publish the original unity library as well.
+
+## This is using reflection, isn't that slow?
+
+Reflection is not slow, it's pretty fast in C# actually. Where you will hit problems with relfection and speed is if you are doing thousands or millions of opperations, like in a http request on a busy website, using it at startup like this you are doing very few opperations and only when the applicaiton starts.
+
+
