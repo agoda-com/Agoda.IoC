@@ -7,7 +7,7 @@ on:
     branches: main
 
 env:
-  NETCORE_VERSION: '3.1.402'  
+  NETCORE_VERSION: '3.1.x'  
   GIT_REPO_ROOT: src
   MAJOR_MINOR_VERSION: 1.1.
   SOLUTION_FILE: Agoda.IoC.sln
@@ -28,6 +28,9 @@ jobs:
       working-directory: ${{ env.GIT_REPO_ROOT }}        
       run: dotnet restore ${{ env.SOLUTION_FILE }}
 
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1
+      
     - name: Build
       working-directory: ${{ env.GIT_REPO_ROOT }}        
       run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
