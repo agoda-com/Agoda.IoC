@@ -36,9 +36,13 @@ The basic usage of this project allow you to use 3 core attributes on your class
 
     // Simple registration
     public interface IService {}
-    [RegisterPerRequest]
+    [RegisterSingleton] /// replaces services.AddSingleton<IService, Service>();
     public class Service : IService {}
 
+```
+Replaces something like this in your startup.
+```csharp
+services.AddSingleton<IService , Service>();
 ```
 
 The library will assembly scan your app at start-up and register services in IoC container based on the attribute and it's parameters.
