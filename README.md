@@ -2,6 +2,12 @@
 
 Share dotnet C# IoC implementation, used at Agoda for Registration of classes into IoC container based on Attributes. 
 
+## The Problem?
+
+Mostly in our larger projects at Agoda, teh Dependency inject registration was done in a single or set of "configuration" classes, these large configuration type files are troublesome due to frequency of merge conflicts. Also to look at a normal class and know if it will be run as a singleton or transient you need to dig into these configuration classes.
+
+By declaring the IoC configuration at the top of each class it makes it immediately clear to the developer how the class's lifecycle is when running, and avoids large complex configuration classes.
+
 ## Adding to your project
 
 Install the package, then add to your startup.cs class
@@ -84,6 +90,10 @@ Below example demonstrates using attributes to indicate a mock option for a regi
     public class ServiceWithMock : IServiceWithMock {}
 
 ```
+
+## A Unity 3.5 Project?
+
+Some of the old legacy systems at Agoda run an old version of unity, and this library was originally developed against that. These days every thing is moving towards net core, but we still decided to publish the original unity library as well.
 
 ## Dedication
 
