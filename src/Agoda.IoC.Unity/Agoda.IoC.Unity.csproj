@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+      <TargetFramework>net472</TargetFramework>
+      <PackageId>Agoda.IoC.Unity</PackageId>
+      <Title>Agoda IoC</Title>
+      <Authors>Joel Dickson, Michael Chamberlian </Authors>
+      <RepositoryUrl>https://github.com/agoda-com/Agoda.IoC</RepositoryUrl>
+      <PackageTags>Dependency Injection;IoC;Agoda</PackageTags>
+      <PackageLicenseUrl></PackageLicenseUrl>
+      <Copyright>Copyright © Agoda 2020</Copyright>
+      <Description>Share dotnet C# IoC implementation, used at Agoda.</Description>
+      <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Agoda.Analyzers" Version="1.0.504">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Unity" Version="3.5.1404" />
+    <PackageReference Include="Unity.Mvc" Version="3.5.1404" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Agoda.IoC.Core\Agoda.IoC.Core.csproj" />
+  </ItemGroup>
+
+</Project>

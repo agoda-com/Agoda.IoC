@@ -1,0 +1,104 @@
+*.txt	text eol=crlf diff
+*.xml	text eol=crlf diff
+*.xaml	text eol=crlf diff
+*.dll	-text -diff
+*.pdb	-text -diff
+*.zip	-text -diff
+*.config	text eol=crlf diff
+*.docx	-text -diff
+*.sample	text eol=crlf diff
+*.chm	-text -diff
+*.jar	-text -diff
+*.sln	text eol=crlf diff
+*.vssscc	text eol=crlf diff
+*.testsettings	text eol=crlf diff
+*.vsmdi	text eol=crlf diff
+*.targets	text eol=crlf diff
+*.bat	text eol=crlf diff
+*.idx	-text -diff
+*.pack	-text -diff
+*.698_20141017	text eol=crlf diff
+*.181_20141104	text eol=crlf diff
+*.698_20141105	text eol=crlf diff
+*.701_20141106	text eol=crlf diff
+*.488_20141110	text eol=crlf diff
+*.197_20141117	text eol=crlf diff
+*.190_20141016	text eol=crlf diff
+*.csproj	text eol=crlf diff
+*.vspscc	text eol=crlf diff
+*.cs	text eol=crlf diff
+*.settings	text eol=crlf diff
+*.Config	text eol=crlf diff
+*.exe	-text -diff
+*.aspx	text eol=crlf diff
+*.vb	text eol=crlf diff
+*.asax	text eol=crlf diff
+*.ashx	text eol=crlf diff
+*.ico	-text -diff
+*.html	text eol=crlf diff
+*.vbproj	text eol=crlf diff
+*.csv	text eol=crlf diff
+*.loadtest	text eol=crlf diff
+*.webtest	text eol=crlf diff
+*.cd	text eol=crlf diff
+*.jmx	text eol=crlf diff
+*.css	text eol=crlf diff
+*.json	text eol=crlf diff
+*.js	text eol=crlf diff
+*.XML	text eol=crlf diff
+*.prefs	text eol=crlf diff
+*.tsv	text eol=crlf diff
+*.xlsx	-text -diff
+*.au3	text eol=crlf diff
+*.donotuse	-text -diff
+*.png	-text -diff
+*.nupkg	-text -diff
+*.htm	text eol=crlf diff
+*.browser	text eol=crlf diff
+*.exclude	text eol=crlf diff
+*.gif	-text -diff
+*.jpg	-text -diff
+*.mmdb	-text -diff
+*.myapp	text eol=crlf diff
+*.resx	text eol=crlf diff
+*.rb	text eol=crlf diff
+*.yaml	text eol=crlf diff
+*.manifest	text eol=crlf diff
+*.sql	text eol=crlf diff
+*.markdown	text eol=crlf diff
+*.launch	text eol=crlf diff
+*.crx	-text -diff
+*.xpi	-text -diff
+*.ps1	text eol=crlf diff
+*.ascx	text eol=crlf diff
+*.master	text eol=crlf diff
+*.disco	text eol=crlf diff
+*.discomap	text eol=crlf diff
+*.wsdl	text eol=crlf diff
+*.htc	text eol=crlf diff
+*.pubxml	text eol=crlf diff
+*.datasource	text eol=crlf diff
+*.map	text eol=crlf diff
+*.ts	text eol=crlf diff
+*.cshtml	text eol=crlf diff
+*.nuspec	text eol=crlf diff
+*.pp	text eol=crlf diff
+*.opts	text eol=crlf diff
+*.erb	text eol=crlf diff
+*.pri	-text -diff
+*.inc	text eol=crlf diff
+*.db	-text -diff
+*.html-20090130	text eol=crlf diff
+*.Master	text eol=crlf diff
+*.rej	text eol=crlf diff
+*.psd	-text -diff
+*.bmp	-text -diff
+*.properties	text eol=crlf diff
+*.task	text eol=crlf diff
+*.project	text eol=crlf diff
+*.classpath text eol=crlf diff
+*.buildpath text eol=crlf diff
+*.java	text eol=crlf diff
+*.sql encoding=UTF-8
+*.cshtml encoding=UTF-8
+*.cs encoding=UTF-8

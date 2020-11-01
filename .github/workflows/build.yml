@@ -1,0 +1,86 @@
+name: .NET Core Build and Publish
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+env:
+  NETCORE_VERSION: '3.1.x'  
+  GIT_REPO_ROOT: src
+  MAJOR_MINOR_VERSION: 1.1.
+  SOLUTION_FILE: Agoda.IoC.sln
+
+jobs:
+  build:
+    name: Build Package 
+    runs-on: windows-latest # using windows agent for net472 build.
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core SDK ${{ env.NETCORE_VERSION }}
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.NETCORE_VERSION }}
+
+    - name: Restore
+      working-directory: ${{ env.GIT_REPO_ROOT }}        
+      run: dotnet restore ${{ env.SOLUTION_FILE }}
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Build
+      working-directory: ${{ env.GIT_REPO_ROOT }}        
+      run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Debug --no-restore
+
+    - name: Run Unit Tests and Generate Coverage
+      uses: glennawatson/coverlet-msbuild@v1
+      with:
+        project-files: '**/*Tests.csproj'
+        no-build: true  
+        output-format: cobertura
+        output: results
+        configuration: Debug
+        
+    - name: Pack
+      working-directory: ${{ env.GIT_REPO_ROOT }}    
+      run: dotnet pack ${{ env.SOLUTION_FILE }} --configuration Debug -o finalpackage --no-build -p:PackageVersion=${{ env.MAJOR_MINOR_VERSION }}${{ github.run_number }}
+
+    - name: Publish artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: nupkg
+        path: ${{ env.GIT_REPO_ROOT }}/finalpackage
+
+    - uses: codecov/codecov-action@v1
+      with:
+        files: src/Agoda.IoC.Unity.UnitTests/results.cobertura.xml,src/Agoda.IoC.Unity.NetCore/results.cobertura.xml # optional
+        fail_ci_if_error: true # optional (default = false)
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    name: Deploy Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Package artifact
+        uses: actions/download-artifact@master
+        with:
+          name: nupkg
+          path: ./nupkg
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.2
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-version: latest
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.NETCORE_VERSION }}
+
+      - name: Push to NuGet
+        run: dotnet nuget push nupkg/**/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://nuget.org --skip-duplicate
