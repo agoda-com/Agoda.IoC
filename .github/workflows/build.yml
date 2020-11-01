@@ -34,7 +34,7 @@ jobs:
 
     - name: Test
       working-directory: ${{ env.GIT_REPO_ROOT }}        
-      run: dotnet test ${{ env.GIT_REPO_ROOT }} --no-build --logger GitHubActions /p:CoverletOutput=results /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --logger GitHubActions /p:CoverletOutput=results /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
     - name: Pack
       working-directory: ${{ env.GIT_REPO_ROOT }}    
