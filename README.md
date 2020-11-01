@@ -102,4 +102,5 @@ Some of the old legacy systems at Agoda run an old version of unity, and this li
 
 Reflection is not slow, it's pretty fast in C# actually. Where you will hit problems with relfection and speed is if you are doing thousands or millions of opperations, like in a http request on a busy website, using it at startup like this you are doing very few opperations and only when the applicaiton starts.
 
-
+## Dedication
+A large amount of the code in this repository was written by Michael Alastair Chamberlain who is no longer with us, so it is with this community contribution we remember him.
