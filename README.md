@@ -1,5 +1,5 @@
 # Agoda IoC Extensions 
-![Build](https://github.com/agoda-com/Agoda.IoC/workflows/.github/workflows/build.yml/badge.svg?branch=main)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/agoda-com/Agoda.IoC/.NET%20Core%20Build%20and%20Publish/main)
 ![Nuget](https://img.shields.io/nuget/v/agoda.ioc.netcore)
 ![Codecov](https://img.shields.io/codecov/c/github/agoda-com/agoda.ioc)
 
