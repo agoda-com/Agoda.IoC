@@ -39,16 +39,14 @@ jobs:
       uses: glennawatson/coverlet-msbuild@v1
       with:
         project-files: '**/*Tests.csproj'
-        no-build: true
-        exclude-filter: '[${{env.productNamespacePrefix}}.*.Tests.*]*'
-        include-filter: '[${{env.productNamespacePrefix}}*]*'        
+        no-build: true  
         output-format: cobertura
-        output: '../../artifacts/'
+        output: results
         configuration: Debug
         
     - name: Pack
       working-directory: ${{ env.GIT_REPO_ROOT }}    
-      run: dotnet pack ${{ env.SOLUTION_FILE }} --configuration Release -o finalpackage --no-build -p:PackageVersion=${{ env.MAJOR_MINOR_VERSION }}${{ github.run_number }}
+      run: dotnet pack ${{ env.SOLUTION_FILE }} --configuration Debug -o finalpackage --no-build -p:PackageVersion=${{ env.MAJOR_MINOR_VERSION }}${{ github.run_number }}
 
     - name: Publish artifact
       uses: actions/upload-artifact@master
