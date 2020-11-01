@@ -3,7 +3,7 @@
 ![Nuget](https://img.shields.io/nuget/v/agoda.ioc.netcore)
 ![Codecov](https://img.shields.io/codecov/c/github/agoda-com/agoda.ioc)
 
-Share dotnet C# IoC implementation, used at Agoda for Registration of classes into IoC container based on Attributes. 
+C# IoC extension library, used at Agoda for Registration of classes into IoC container based on Attributes. 
 
 ## The Problem?
 
