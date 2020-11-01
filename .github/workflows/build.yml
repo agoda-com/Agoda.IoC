@@ -30,10 +30,10 @@ jobs:
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1
-      
+
     - name: Build
       working-directory: ${{ env.GIT_REPO_ROOT }}        
-      run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
+      run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Debug --no-restore
 
     - name: Run Unit Tests and Generate Coverage
       uses: glennawatson/coverlet-msbuild@v1
