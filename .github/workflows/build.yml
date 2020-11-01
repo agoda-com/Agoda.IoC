@@ -37,8 +37,10 @@ jobs:
       with:
         project-files: '**/*Tests.csproj'
         no-build: true
-        output-format: opencover
-        output: 'results'
+        exclude-filter: '[${{env.productNamespacePrefix}}.*.Tests.*]*'
+        include-filter: '[${{env.productNamespacePrefix}}*]*'        
+        output-format: cobertura
+        output: '../../artifacts/'
         configuration: Debug
         
     - name: Pack
