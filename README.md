@@ -1,4 +1,5 @@
 # Agoda IoC Extensions 
+![Build](https://github.com/agoda-com/Agoda.IoC/workflows/.github/workflows/build.yml/badge.svg?branch=main)
 
 Share dotnet C# IoC implementation, used at Agoda for Registration of classes into IoC container based on Attributes. 
 
