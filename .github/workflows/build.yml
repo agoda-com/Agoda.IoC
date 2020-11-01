@@ -32,9 +32,15 @@ jobs:
       working-directory: ${{ env.GIT_REPO_ROOT }}        
       run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
-    - name: Test     
-      run: dotnet test src/Agoda.IoC.Unity.UnitTests/Agoda.IoC.Unity.UnitTests.csproj --no-build --logger GitHubActions /p:CoverletOutput=results /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-
+    - name: Run Unit Tests and Generate Coverage
+      uses: glennawatson/coverlet-msbuild@v1
+      with:
+        project-files: '**/*Tests.csproj'
+        no-build: true
+        output-format: opencover
+        output: 'results'
+        configuration: Debug
+        
     - name: Pack
       working-directory: ${{ env.GIT_REPO_ROOT }}    
       run: dotnet pack ${{ env.SOLUTION_FILE }} --configuration Release -o finalpackage --no-build -p:PackageVersion=${{ env.MAJOR_MINOR_VERSION }}${{ github.run_number }}
