@@ -10,15 +10,23 @@ namespace Agoda.IoC.NetCore
 {
     public static class StartupExtension
     {
-        public static IServiceCollection AutoWireAssembly(this IServiceCollection services, Assembly[] assemblies,
-             bool isMockMode)
+        public static IServiceCollection AutoWireAssembly(
+            this IServiceCollection services,
+            Assembly[] assemblies,
+            bool isMockMode,
+            Action<ContainerRegistrationContextException> onRegistrationException = null)
         {
-            return services.AutoWireAssembly<RegisterPerRequestAttribute>(assemblies, ServiceLifetime.Scoped,isMockMode)
-                .AutoWireAssembly<RegisterSingletonAttribute>(assemblies, ServiceLifetime.Singleton, isMockMode)
-                .AutoWireAssembly<RegisterTransientAttribute>(assemblies, ServiceLifetime.Transient, isMockMode);
+            
+            return services.AutoWireAssembly<RegisterPerRequestAttribute>(assemblies, ServiceLifetime.Scoped, isMockMode, onRegistrationException)
+                .AutoWireAssembly<RegisterSingletonAttribute>(assemblies, ServiceLifetime.Singleton, isMockMode, onRegistrationException)
+                .AutoWireAssembly<RegisterTransientAttribute>(assemblies, ServiceLifetime.Transient, isMockMode, onRegistrationException);
         }
 
-        public static IServiceCollection AutoWireAssembly<T>(this IServiceCollection services, Assembly[] assemblies, ServiceLifetime serviceLifetime, bool isMockMode) 
+        public static IServiceCollection AutoWireAssembly<T>(
+            this IServiceCollection services, Assembly[] assemblies,
+            ServiceLifetime serviceLifetime,
+            bool isMockMode,
+            Action<ContainerRegistrationContextException> onRegistrationException = null)
             where T : ContainerRegistrationAttribute
         {
             var registrations = assemblies
@@ -34,6 +42,21 @@ namespace Agoda.IoC.NetCore
                     attr => new RegistrationContext(attr, x.ToType, isMockMode)
                 ))
                 .ToList();
+
+            if (registrations.Any(x => !x.Validation.IsValid))
+            {
+                var exceptions  = new ContainerRegistrationContextException("There are validations error!!!");
+                exceptions
+                    .RegistrationContextExceptions
+                    .AddRange(registrations.Where(x => !x.Validation.IsValid)
+                                           .Select(ex => new RegistrationContextException(ex, ex.Validation.ErrorMessage)));
+                onRegistrationException?.Invoke(exceptions);
+                if (!exceptions.Ignore)
+                {
+                    throw exceptions;
+                }
+            }
+
             foreach (var reg in registrations)
             {
                 var toType = isMockMode && reg.MockType != null
