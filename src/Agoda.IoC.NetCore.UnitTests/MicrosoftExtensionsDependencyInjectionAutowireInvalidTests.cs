@@ -21,8 +21,8 @@ namespace Agoda.IoC.NetCore.UnitTests
             Assert.Throws<ContainerRegistrationContextException>(() => container.AutoWireAssembly(new[]
             {
                 typeof(AmbiguousRegistration).Assembly
-            }, false,onexceptio => {
-                onexceptio.Ignore = false;
+            }, false,onException => {
+                onException.Ignore = false;
             }));
         }
     }
