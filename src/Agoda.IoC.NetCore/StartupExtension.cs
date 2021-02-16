@@ -45,7 +45,7 @@ namespace Agoda.IoC.NetCore
 
             if (registrations.Any(x => !x.Validation.IsValid))
             {
-                var exceptions  = new ContainerRegistrationContextException("There are validations error!!!");
+                var exceptions  = new ContainerRegistrationContextException("There are validations errors!!!");
                 exceptions
                     .RegistrationContextExceptions
                     .AddRange(registrations.Where(x => !x.Validation.IsValid)
