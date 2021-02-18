@@ -50,8 +50,7 @@ namespace Agoda.IoC.NetCore
                         var buildMethod = factoryInstance.GetType().GetMethod("Build");
                         Debug.Assert(buildMethod != null, nameof(buildMethod) + " != null"); // type is checked by RegistrationInfo.Validate()
 
-                        var componentResolverInstance = Activator.CreateInstance(typeof(NetCoreComponentResolver), x);
-                        return buildMethod.Invoke(factoryInstance, new[] { componentResolverInstance });
+                        return buildMethod.Invoke(factoryInstance, new[] { new NetCoreComponentResolver(x) });
 
                     }, serviceLifetime));
                 }
