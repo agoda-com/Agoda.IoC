@@ -14,21 +14,25 @@ namespace Agoda.IoC.NetCore
             this IServiceCollection services,
             Assembly[] assemblies,
             bool isMockMode,
-            Action<ContainerRegistrationContextException> onRegistrationException = null)
+            Action<ContainerRegistrationOption> option = null)
         {
-            
-            return services.AutoWireAssembly<RegisterPerRequestAttribute>(assemblies, ServiceLifetime.Scoped, isMockMode, onRegistrationException)
-                .AutoWireAssembly<RegisterSingletonAttribute>(assemblies, ServiceLifetime.Singleton, isMockMode, onRegistrationException)
-                .AutoWireAssembly<RegisterTransientAttribute>(assemblies, ServiceLifetime.Transient, isMockMode, onRegistrationException);
+            return services.AutoWireAssembly<RegisterPerRequestAttribute>(assemblies, ServiceLifetime.Scoped, isMockMode, option)
+                .AutoWireAssembly<RegisterSingletonAttribute>(assemblies, ServiceLifetime.Singleton, isMockMode, option)
+                .AutoWireAssembly<RegisterTransientAttribute>(assemblies, ServiceLifetime.Transient, isMockMode, option);
         }
 
         public static IServiceCollection AutoWireAssembly<T>(
             this IServiceCollection services, Assembly[] assemblies,
             ServiceLifetime serviceLifetime,
             bool isMockMode,
-            Action<ContainerRegistrationContextException> onRegistrationException = null)
+             Action<ContainerRegistrationOption> option = null)
             where T : ContainerRegistrationAttribute
         {
+
+            var containerRegistrationOption = new ContainerRegistrationOption();
+            option?.Invoke(containerRegistrationOption);
+
+
             var registrations = assemblies
                 .SelectMany(assembly => assembly.GetExportedTypes())
                 .Where(type => type.IsClass)
@@ -43,18 +47,9 @@ namespace Agoda.IoC.NetCore
                 ))
                 .ToList();
 
-            if (registrations.Any(x => !x.Validation.IsValid))
+            if (!Validate(registrations, containerRegistrationOption))
             {
-                var exceptions  = new ContainerRegistrationContextException("There are validations error!!!");
-                exceptions
-                    .RegistrationContextExceptions
-                    .AddRange(registrations.Where(x => !x.Validation.IsValid)
-                                           .Select(ex => new RegistrationContextException(ex, ex.Validation.ErrorMessage)));
-                onRegistrationException?.Invoke(exceptions);
-                if (!exceptions.Ignore)
-                {
-                    throw exceptions;
-                }
+                throw new RegistrationFailedException("There are validations error!!!");
             }
 
             foreach (var reg in registrations)
@@ -85,5 +80,19 @@ namespace Agoda.IoC.NetCore
             return services;
         }
 
+        private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption registrationOption)
+        {
+            bool isValid = true;
+            registrations.ForEach(reg => {
+                if (!reg.Validation.IsValid)
+                {
+                    isValid = false;
+                    registrationOption
+                        .OnRegistrationContextException?
+                        .Invoke(new RegistrationContextException(reg, reg.Validation.ErrorMessage));
+                }
+            });
+            return isValid;
+        }
     }
 }
