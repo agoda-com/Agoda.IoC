@@ -67,7 +67,8 @@ namespace Agoda.IoC.NetCore
                         var factoryInstance = Activator.CreateInstance(reg.FactoryType);
                         var buildMethod = factoryInstance.GetType().GetMethod("Build");
                         Debug.Assert(buildMethod != null, nameof(buildMethod) + " != null"); // type is checked by RegistrationInfo.Validate()
-                        return buildMethod.Invoke(factoryInstance, null);
+
+                        return buildMethod.Invoke(factoryInstance, new[] { new NetCoreComponentResolver(x) });
 
                     }, serviceLifetime));
                 }
@@ -78,8 +79,7 @@ namespace Agoda.IoC.NetCore
 
             }
             return services;
-        }
-
+        } 
         private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption containerRegistrationOption)
         {
             bool isValid = true;
@@ -93,6 +93,22 @@ namespace Agoda.IoC.NetCore
                 }
             });
             return isValid;
+        }
+    }
+    
+    public class NetCoreComponentResolver : IComponentResolver
+    {
+        private readonly IServiceProvider _serviceProvider;
+
+        public NetCoreComponentResolver(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public T Resolve<T>()
+        {
+            return _serviceProvider.GetService<T>();
+
         }
     }
 }
