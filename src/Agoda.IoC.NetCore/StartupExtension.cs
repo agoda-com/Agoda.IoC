@@ -80,14 +80,14 @@ namespace Agoda.IoC.NetCore
             return services;
         }
 
-        private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption registrationOption)
+        private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption containerRegistrationOption)
         {
             bool isValid = true;
             registrations.ForEach(reg => {
                 if (!reg.Validation.IsValid)
                 {
                     isValid = false;
-                    registrationOption
+                    containerRegistrationOption
                         .OnRegistrationContextException?
                         .Invoke(new RegistrationContextException(reg, reg.Validation.ErrorMessage));
                 }
