@@ -10,6 +10,40 @@ using Shouldly;
 
 namespace Agoda.IoC.NetCore.UnitTests
 {
+    [TestFixture]
+    public class MicrosoftExtensionsDependencyInjectionAutowireTestsForKeyedFactory
+    {
+        private IServiceCollection _container;
+
+        private IServiceCollection _containerMocked;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _container = new ServiceCollection();
+            _container.AutoWireAssembly(new[]
+            {
+                typeof(NoAttribute).Assembly
+            }, false);
+            _containerMocked = new ServiceCollection();
+            _containerMocked.AutoWireAssembly(new[]
+            {
+                typeof(NoAttribute).Assembly
+            }, true);
+        }
+        [Test]
+        public void LookforAutowire_IKeyedFactoryService()
+        {
+            var keyedFactoryService = _container.BuildServiceProvider().GetService<IKeyedComponentFactory<IKeyedFactoryService>>();
+
+            var service1 = keyedFactoryService.GetByKey("Service_1");
+            var service2 = keyedFactoryService.GetByKey("Service_2");
+
+            service1.GetType().ShouldBe(typeof(KeyedFactoryService1));
+            service2.GetType().ShouldBe(typeof(KeyedFactoryService2));
+
+        }
+    }
 
     [TestFixture]
     public class MicrosoftExtensionsDependencyInjectionAutowireTests
@@ -227,16 +261,18 @@ namespace Agoda.IoC.NetCore.UnitTests
         }
 
         [Test]
-        public void LookforAutowire_IKeyedFactoryService()
+        public void LookforAutowire_KeyedRegistrationFactoryChecks()
         {
-            var keyedFactoryService = _container.BuildServiceProvider().GetService<IKeyedComponentFactory<IKeyedFactoryService>>();
-
-            var service1 = keyedFactoryService.GetByKey("Service_1");
-            var service2 = keyedFactoryService.GetByKey("Service_2");
-
-            typeof(KeyedFactoryService1).ShouldBeAssignableTo(service1.GetType());
-            typeof(KeyedFactoryService2).ShouldBeAssignableTo(service2.GetType());
-
+            _container
+                .Any(x =>
+                    x.ServiceType == typeof(KeyedFactoryService1)
+                    && x.Lifetime == ServiceLifetime.Singleton)
+                .ShouldBeTrue();
+            _container
+                .Any(x =>
+                    x.ServiceType == typeof(KeyedFactoryService2)
+                    && x.Lifetime == ServiceLifetime.Scoped)
+                .ShouldBeTrue();
         }
     }
 }

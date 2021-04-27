@@ -12,11 +12,13 @@ namespace Agoda.IoC.NetCore
     {
         public Type Type { get; set; }
         public object Key { get; set; }
+        public ServiceLifetime ServiceLifetime { get; set; }
 
-        public KeyTypePair(object key, Type type)
+        public KeyTypePair(object key, Type type, ServiceLifetime serviceLifetime)
         {
             Key = key;
             Type = type;
+            ServiceLifetime = serviceLifetime;
         }
     }
     public static class StartupExtension
@@ -90,7 +92,7 @@ namespace Agoda.IoC.NetCore
                 }
                 else if (reg.Key != null)
                 {
-                    AddToKeyedRegistrationList(reg, keysForTypes);
+                    AddToKeyedRegistrationList(reg, keysForTypes, serviceLifetime);
                 }
                 else
                 {
@@ -105,11 +107,11 @@ namespace Agoda.IoC.NetCore
         /// Ensure keys for each keyed registered type are unique
         /// </summary>
         /// <exception cref="RegistrationFailedException"></exception>
-        private static void AddToKeyedRegistrationList(RegistrationContext reg, IDictionary<Type, List<KeyTypePair>> keysForTypes)
+        private static void AddToKeyedRegistrationList(RegistrationContext reg, IDictionary<Type, List<KeyTypePair>> keysForTypes, ServiceLifetime serviceLifetime)
         {
             if (!keysForTypes.TryGetValue(reg.FromType, out var keys))
             {
-                keysForTypes.Add(reg.FromType, new List<KeyTypePair> {new KeyTypePair(reg.Key, reg.ToType)});
+                keysForTypes.Add(reg.FromType, new List<KeyTypePair> {new KeyTypePair(reg.Key, reg.ToType, serviceLifetime) });
             }
             else if (keys.Any(x => x.Key == reg.Key))
             {
@@ -119,7 +121,7 @@ namespace Agoda.IoC.NetCore
             }
             else
             {
-                keysForTypes[reg.FromType].Add(new KeyTypePair(reg.Key, reg.ToType));
+                keysForTypes[reg.FromType].Add(new KeyTypePair(reg.Key, reg.ToType, serviceLifetime));
             }
         }
 
@@ -129,14 +131,20 @@ namespace Agoda.IoC.NetCore
             {
                 var keyedFactoryInterfaceType = typeof(IKeyedComponentFactory<>).MakeGenericType(key.Key);
                 var keyedFactoryImplementationType = typeof(KeyedComponentFactory<>).MakeGenericType(key.Key);
-                
+
                 var regObject = typeof(NetCoreKeyedRegistrations<>).MakeGenericType(key.Key);
-                var regObjectInstance = Activator.CreateInstance(regObject, key.Value.ToDictionary(x => x.Key, y => y.Type));
-                services.AddSingleton(regObjectInstance);
+                var regObjectInstance = Activator.CreateInstance(regObject,
+                    key.Value.ToDictionary(x => x.Key,
+                        y => y.Type));
+                services.AddSingleton(regObject, provider => regObjectInstance);
                 services.AddSingleton(keyedFactoryInterfaceType, keyedFactoryImplementationType);
-                services.AddSingleton(typeof(NetCoreKeyedComponentResolver<>).MakeGenericType(key.Key));
+                services.AddSingleton(typeof(IKeyedComponentResolver<>).MakeGenericType(key.Key),typeof(NetCoreKeyedComponentResolver<>).MakeGenericType(key.Key));
+                foreach (var implementation in key.Value)
+                {
+                    services.Add(new ServiceDescriptor(implementation.Type, implementation.Type,
+                                    implementation.ServiceLifetime));
+                }
             }
-                
         }
 
         private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption containerRegistrationOption)
