@@ -8,31 +8,47 @@ using System.Reflection;
 
 namespace Agoda.IoC.NetCore
 {
+    public class KeyTypePair
+    {
+        public Type Type { get; set; }
+        public object Key { get; set; }
+
+        public KeyTypePair(object key, Type type)
+        {
+            Key = key;
+            Type = type;
+        }
+    }
     public static class StartupExtension
     {
+
         public static IServiceCollection AutoWireAssembly(
             this IServiceCollection services,
             Assembly[] assemblies,
             bool isMockMode,
             Action<ContainerRegistrationOption> option = null)
         {
-            return services.AutoWireAssembly<RegisterPerRequestAttribute>(assemblies, ServiceLifetime.Scoped, isMockMode, option)
-                .AutoWireAssembly<RegisterSingletonAttribute>(assemblies, ServiceLifetime.Singleton, isMockMode, option)
-                .AutoWireAssembly<RegisterTransientAttribute>(assemblies, ServiceLifetime.Transient, isMockMode, option);
+            IDictionary<Type, List<KeyTypePair>> keysForTypes = new Dictionary<Type, List<KeyTypePair>>();
+            var rtn = services.AutoWireAssembly<RegisterPerRequestAttribute>(assemblies, ServiceLifetime.Scoped, isMockMode, option, keysForTypes)
+                .AutoWireAssembly<RegisterSingletonAttribute>(assemblies, ServiceLifetime.Singleton, isMockMode, option, keysForTypes)
+                .AutoWireAssembly<RegisterTransientAttribute>(assemblies, ServiceLifetime.Transient, isMockMode, option, keysForTypes);
+            services.RegisterKeyedFactory(keysForTypes);
+            return rtn;
         }
 
         public static IServiceCollection AutoWireAssembly<T>(
             this IServiceCollection services, Assembly[] assemblies,
             ServiceLifetime serviceLifetime,
             bool isMockMode,
-             Action<ContainerRegistrationOption> option = null)
+             Action<ContainerRegistrationOption> option = null, 
+            IDictionary<Type, List<KeyTypePair>> keysForTypes = null)
             where T : ContainerRegistrationAttribute
         {
 
-            var containerRegistrationOption = new ContainerRegistrationOption();
+
+        var containerRegistrationOption = new ContainerRegistrationOption();
             option?.Invoke(containerRegistrationOption);
-
-
+            
             var registrations = assemblies
                 .SelectMany(assembly => assembly.GetExportedTypes())
                 .Where(type => type.IsClass)
@@ -72,6 +88,10 @@ namespace Agoda.IoC.NetCore
 
                     }, serviceLifetime));
                 }
+                else if (reg.Key != null)
+                {
+                    AddToKeyedRegistrationList(reg, keysForTypes);
+                }
                 else
                 {
                     services.Add(new ServiceDescriptor(reg.FromType, toType, serviceLifetime));
@@ -79,7 +99,46 @@ namespace Agoda.IoC.NetCore
 
             }
             return services;
-        } 
+        }
+
+        /// <summary>
+        /// Ensure keys for each keyed registered type are unique
+        /// </summary>
+        /// <exception cref="RegistrationFailedException"></exception>
+        private static void AddToKeyedRegistrationList(RegistrationContext reg, IDictionary<Type, List<KeyTypePair>> keysForTypes)
+        {
+            if (!keysForTypes.TryGetValue(reg.FromType, out var keys))
+            {
+                keysForTypes.Add(reg.FromType, new List<KeyTypePair> {new KeyTypePair(reg.Key, reg.ToType)});
+            }
+            else if (keys.Any(x => x.Key == reg.Key))
+            {
+                var msg = $"{reg.ToType.FullName}: {nameof(ContainerRegistrationAttribute.Key)} \"{reg.Key}\" has " +
+                          $"already been registered for {reg.FromType.FullName}. Keys must be unique.";
+                throw new RegistrationFailedException(msg);
+            }
+            else
+            {
+                keysForTypes[reg.FromType].Add(new KeyTypePair(reg.Key, reg.ToType));
+            }
+        }
+
+        private static void RegisterKeyedFactory(this IServiceCollection services, IDictionary<Type, List<KeyTypePair>> keysForTypes)
+        {
+            foreach (var key in keysForTypes)
+            {
+                var keyedFactoryInterfaceType = typeof(IKeyedComponentFactory<>).MakeGenericType(key.Key);
+                var keyedFactoryImplementationType = typeof(KeyedComponentFactory<>).MakeGenericType(key.Key);
+                
+                var regObject = typeof(NetCoreKeyedRegistrations<>).MakeGenericType(key.Key);
+                var regObjectInstance = Activator.CreateInstance(regObject, key.Value.ToDictionary(x => x.Key, y => y.Type));
+                services.AddSingleton(regObjectInstance);
+                services.AddSingleton(keyedFactoryInterfaceType, keyedFactoryImplementationType);
+                services.AddSingleton(typeof(NetCoreKeyedComponentResolver<>).MakeGenericType(key.Key));
+            }
+                
+        }
+
         private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption containerRegistrationOption)
         {
             bool isValid = true;

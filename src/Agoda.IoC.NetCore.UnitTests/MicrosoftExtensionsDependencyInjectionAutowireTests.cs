@@ -53,7 +53,6 @@ namespace Agoda.IoC.NetCore.UnitTests
                 .ShouldBeTrue();
         }
 
-
         [Test]
         public void LookforAutowire_MockServiceOriginal()
         {
@@ -64,6 +63,7 @@ namespace Agoda.IoC.NetCore.UnitTests
                     && x.Lifetime == ServiceLifetime.Transient)
                 .ShouldBeTrue();
         }
+
         [Test]
         public void LookforAutowire_MockServiceMock()
         {
@@ -224,6 +224,19 @@ namespace Agoda.IoC.NetCore.UnitTests
                     && x.ImplementationFactory != null
                     && x.Lifetime == ServiceLifetime.Transient)
                 .ShouldBeTrue();
+        }
+
+        [Test]
+        public void LookforAutowire_IKeyedFactoryService()
+        {
+            var keyedFactoryService = _container.BuildServiceProvider().GetService<IKeyedComponentFactory<IKeyedFactoryService>>();
+
+            var service1 = keyedFactoryService.GetByKey("Service_1");
+            var service2 = keyedFactoryService.GetByKey("Service_2");
+
+            typeof(KeyedFactoryService1).ShouldBeAssignableTo(service1.GetType());
+            typeof(KeyedFactoryService2).ShouldBeAssignableTo(service2.GetType());
+
         }
     }
 }

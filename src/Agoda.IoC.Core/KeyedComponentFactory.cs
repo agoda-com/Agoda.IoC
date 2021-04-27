@@ -20,7 +20,7 @@ namespace Agoda.IoC.Core
 
         public bool IsRegistered(object key)
         {
-            return _registeredKeys.Contains(key);
+            return _componentResolver.IsRegistered(key);
         }
 
         public T TryGetByKey(object key)

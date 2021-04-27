@@ -79,6 +79,22 @@ It can also be used to register multiple instances
     [RegisterSingleton(For = typeof(IMultipleAttributes2))]
     public class MultipleAttributes : IMultipleAttributes1, IMultipleAttributes2 {}
 ```
+## Keyed Registration
+
+
+```csharp
+
+    [RegisterSingleton(Key = "Service_1")]
+    public class KeyedFactoryService1 : IKeyedFactoryService {} 
+    [RegisterPerRequest(Key = "Service_2")]
+    public class KeyedFactoryService2 : IKeyedFactoryService {}
+
+
+public ctor(IKeyedComponentFactory<IKeyedFactoryService> _keyedFactoryService)
+{
+    _service2 = _keyedFactoryService.GetByKey("Service_2")
+}
+```
 
 And may more options...
 
