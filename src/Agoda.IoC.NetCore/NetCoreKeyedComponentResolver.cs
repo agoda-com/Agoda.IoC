@@ -24,9 +24,7 @@ namespace Agoda.IoC.NetCore
             return (T)_container.GetService(implementationType);
         }
 
-        public bool IsRegistered(string key)
-        {
-            return !_registrations.TryGetValue(key, out var implementationType);
-        }
+        public bool IsRegistered(string key) => _registrations.TryGetValue(key, out var implementationType);
+        
     }
 }

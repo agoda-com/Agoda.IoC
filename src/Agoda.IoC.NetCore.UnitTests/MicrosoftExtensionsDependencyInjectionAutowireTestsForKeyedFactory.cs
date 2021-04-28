@@ -27,17 +27,20 @@ namespace Agoda.IoC.NetCore.UnitTests
                 typeof(NoAttribute).Assembly
             }, true);
         }
+
         [Test]
         public void LookforAutowire_IKeyedFactoryService()
         {
             var keyedFactoryService = _container.BuildServiceProvider().GetService<IKeyedComponentFactory<IKeyedFactoryService>>();
+
+            keyedFactoryService.IsRegistered("Service_1").ShouldBeTrue();
+            keyedFactoryService.IsRegistered("Service_1a").ShouldBeFalse();
 
             var service1 = keyedFactoryService.GetByKey("Service_1");
             var service2 = keyedFactoryService.GetByKey("Service_2");
 
             service1.GetType().ShouldBe(typeof(KeyedFactoryService1));
             service2.GetType().ShouldBe(typeof(KeyedFactoryService2));
-
         }
     }
 }
