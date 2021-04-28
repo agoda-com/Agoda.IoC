@@ -8,22 +8,8 @@ using System.Reflection;
 
 namespace Agoda.IoC.NetCore
 {
-    public class KeyTypePair
-    {
-        public Type Type { get; set; }
-        public object Key { get; set; }
-        public ServiceLifetime ServiceLifetime { get; set; }
-
-        public KeyTypePair(object key, Type type, ServiceLifetime serviceLifetime)
-        {
-            Key = key;
-            Type = type;
-            ServiceLifetime = serviceLifetime;
-        }
-    }
     public static class StartupExtension
     {
-
         public static IServiceCollection AutoWireAssembly(
             this IServiceCollection services,
             Assembly[] assemblies,
