@@ -12,12 +12,12 @@ namespace Agoda.IoC.Unity
             _container = container;
         }
 
-        public T Resolve(object key)
+        public T Resolve(string key)
         {
             return _container.Resolve<T>(key.ToString());
         }
 
-        public bool IsRegistered(object key)
+        public bool IsRegistered(string key)
         {
             return _container.IsRegistered<T>(key.ToString());
         }
