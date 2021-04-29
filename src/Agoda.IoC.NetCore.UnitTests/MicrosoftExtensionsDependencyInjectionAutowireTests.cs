@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Agoda.IoC.Core;
 using Agoda.IoC.ProjectUnderTest.Valid;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -10,7 +9,6 @@ using Shouldly;
 
 namespace Agoda.IoC.NetCore.UnitTests
 {
-
     [TestFixture]
     public class MicrosoftExtensionsDependencyInjectionAutowireTests
     {
@@ -53,7 +51,6 @@ namespace Agoda.IoC.NetCore.UnitTests
                 .ShouldBeTrue();
         }
 
-
         [Test]
         public void LookforAutowire_MockServiceOriginal()
         {
@@ -64,6 +61,7 @@ namespace Agoda.IoC.NetCore.UnitTests
                     && x.Lifetime == ServiceLifetime.Transient)
                 .ShouldBeTrue();
         }
+
         [Test]
         public void LookforAutowire_MockServiceMock()
         {
@@ -223,6 +221,21 @@ namespace Agoda.IoC.NetCore.UnitTests
                     x.ServiceType == typeof(IGenericWithFactory<Stack>)
                     && x.ImplementationFactory != null
                     && x.Lifetime == ServiceLifetime.Transient)
+                .ShouldBeTrue();
+        }
+
+        [Test]
+        public void LookforAutowire_KeyedRegistrationFactoryChecks()
+        {
+            _container
+                .Any(x =>
+                    x.ServiceType == typeof(KeyedFactoryService1)
+                    && x.Lifetime == ServiceLifetime.Singleton)
+                .ShouldBeTrue();
+            _container
+                .Any(x =>
+                    x.ServiceType == typeof(KeyedFactoryService2)
+                    && x.Lifetime == ServiceLifetime.Scoped)
                 .ShouldBeTrue();
         }
     }
