@@ -142,6 +142,16 @@ namespace Agoda.IoC.Core
         [Obsolete("Use only for legacy registrations migrated from the RegisterRepository() or RegisterService() Unity " +
                   "extensions. For new code use ServerSideTimer.")]
         public bool LegacyMeasured { get; set; }
+
+        /// <summary>
+        /// Set true to replace services if they are already registered before. Uses Replace extension method of IServiceCollection.
+        /// </summary>
+        public bool ReplaceServices { get; set; }
+
+        /// <summary>
+        /// Set true to register the service only if it's not registered before. Uses TryAdd... extension methods of IServiceCollection.
+        /// </summary>
+        public bool TryRegister { get; set; } 
     }
 
     /// <inheritdoc />
