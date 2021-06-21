@@ -1,5 +1,6 @@
 ﻿using Agoda.IoC.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -82,7 +83,19 @@ namespace Agoda.IoC.NetCore
                 }
                 else
                 {
-                    services.Add(new ServiceDescriptor(reg.FromType, toType, serviceLifetime));
+                    var serviceDescriptor =  new ServiceDescriptor(reg.FromType, toType, serviceLifetime);
+                    if (reg.Attribute?.ReplaceServices == true)
+                    {
+                        services.Replace(serviceDescriptor);
+                    }
+                    else if (reg.Attribute?.TryRegister == true)
+                    {
+                        services.TryAdd(serviceDescriptor);
+                    }
+                    else
+                    {
+                        services.Add(serviceDescriptor);
+                    }                    
                 }
 
             }
