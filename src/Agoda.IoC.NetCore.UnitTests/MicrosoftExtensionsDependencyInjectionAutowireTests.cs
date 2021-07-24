@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Agoda.IoC.ProjectUnderTest.Valid;
+using Agoda.IoC.ProjectUnderTest.Valid2;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Shouldly;
@@ -21,7 +22,8 @@ namespace Agoda.IoC.NetCore.UnitTests
             _container = new ServiceCollection();
             _container.AutoWireAssembly(new[]
             {
-                typeof(NoAttribute).Assembly
+                typeof(NoAttribute).Assembly,
+                typeof(ReplaceServiceTwoWork).Assembly,
             }, false);
             _containerMocked = new ServiceCollection();
             _containerMocked.AutoWireAssembly(new[]
@@ -34,8 +36,8 @@ namespace Agoda.IoC.NetCore.UnitTests
         public void LookforAutowire_ConcreteImplementation()
         {
             _container
-                .Any(x=>
-                    x.ServiceType == typeof(ConcreteImplementation) 
+                .Any(x =>
+                    x.ServiceType == typeof(ConcreteImplementation)
                     && x.Lifetime == ServiceLifetime.Scoped)
                 .ShouldBeTrue();
         }
@@ -237,6 +239,18 @@ namespace Agoda.IoC.NetCore.UnitTests
                     x.ServiceType == typeof(KeyedFactoryService2)
                     && x.Lifetime == ServiceLifetime.Scoped)
                 .ShouldBeTrue();
+        }
+
+        [Test]
+        public void LookforAutowire_ReplaceServiceChecks()
+        {
+            _container
+                .Any(x =>
+                    x.ServiceType == typeof(IReplaceService)
+                    && x.ImplementationType == typeof(ReplaceServiceTwoWork)
+                    && x.Lifetime == ServiceLifetime.Transient)
+                .ShouldBeTrue();
+           
         }
     }
 }
