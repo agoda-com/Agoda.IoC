@@ -14,17 +14,24 @@ namespace Agoda.IoC.NetCore.UnitTests
     public class MicrosoftExtensionsDependencyInjectionAutowireTests
     {
         private IServiceCollection _container;
+        private IServiceCollection _notReplaceContainer;
 
         private IServiceCollection _containerMocked;
         [SetUp]
         public void SetUp()
         {
             _container = new ServiceCollection();
+            _notReplaceContainer = new ServiceCollection();
             _container.AutoWireAssembly(new[]
             {
                 typeof(NoAttribute).Assembly,
                 typeof(ReplaceServiceTwoWork).Assembly,
             }, false);
+            _notReplaceContainer.AutoWireAssembly(new[]
+           {
+                typeof(NoAttribute).Assembly
+            }, false);
+
             _containerMocked = new ServiceCollection();
             _containerMocked.AutoWireAssembly(new[]
             {
@@ -250,7 +257,20 @@ namespace Agoda.IoC.NetCore.UnitTests
                     && x.ImplementationType == typeof(ReplaceServiceTwoWork)
                     && x.Lifetime == ServiceLifetime.Transient)
                 .ShouldBeTrue();
-           
+
+            _notReplaceContainer
+                .Any(x =>
+                    x.ServiceType == typeof(IReplaceService)
+                    && x.ImplementationType == typeof(ReplaceServiceOneWork)
+                    && x.Lifetime == ServiceLifetime.Transient)
+                .ShouldBeTrue();
+
+
+            var svr = _container.BuildServiceProvider().GetRequiredService<IReplaceService>();
+            svr.DoWork.ShouldBe(nameof(ReplaceServiceTwoWork));
+
+            svr = _notReplaceContainer.BuildServiceProvider().GetRequiredService<IReplaceService>();
+            svr.DoWork.ShouldBe(nameof(ReplaceServiceOneWork));
         }
     }
 }

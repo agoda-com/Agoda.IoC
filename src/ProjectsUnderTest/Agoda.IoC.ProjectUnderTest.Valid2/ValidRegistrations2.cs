@@ -1,6 +1,5 @@
 ﻿using Agoda.IoC.Core;
 using Agoda.IoC.ProjectUnderTest.Valid;
-using System;
 
 namespace Agoda.IoC.ProjectUnderTest.Valid2
 {
