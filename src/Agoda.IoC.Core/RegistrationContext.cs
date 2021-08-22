@@ -15,6 +15,8 @@ namespace Agoda.IoC.Core
         public Type FactoryType { get; private set; }
         public ContainerRegistrationAttribute Attribute { get; }
         public bool IsIntercepted { get; }
+
+        public bool ReplaceServices { get; }
         public (bool IsValid, string ErrorMessage) Validation { get; }
 
         private readonly IList<Type> _baseTypes;
@@ -35,9 +37,9 @@ namespace Agoda.IoC.Core
             FactoryType = (mockMode && MockType != null) ? null : attribute.Factory;
             Collection = (attribute.OfCollection, attribute.Order);
             Key = attribute.Key?.ToString();
+            ReplaceServices = attribute.ReplaceServices;
             IsIntercepted = wrapper?.HasInterceptors(this) ?? false;
-            _genericArgument = Attribute.GenericArgument;
-            
+            _genericArgument = attribute.GenericArgument;            
             _baseTypes = ContainerAttributeUtils.GetBaseTypes(attribute, toType).ToList();
             
             // we might have to fiddle with the ToType to keep Unity happy, so we keep a copy of the original for error reporting

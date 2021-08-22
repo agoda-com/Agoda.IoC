@@ -246,4 +246,18 @@ namespace Agoda.IoC.ProjectUnderTest.Valid
         public string BuiltBy { get; set; }
     }
     
+
+    public interface IReplaceService
+    {
+        string DoWork { get; set; }
+    }
+
+    [RegisterTransient]
+    public class ReplaceServiceOneWork : IReplaceService
+    {
+        public string DoWork { get; set; } = nameof(ReplaceServiceOneWork);
+    }
+
+
+
 }

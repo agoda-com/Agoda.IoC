@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.ProjectUnderTest.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.ProjectUnderTest.Valid", "ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid\Agoda.IoC.ProjectUnderTest.Valid.csproj", "{F5BB7380-859D-4087-AA35-58203D9614BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.IoC.ProjectUnderTest.Valid2", "ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid2\Agoda.IoC.ProjectUnderTest.Valid2.csproj", "{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +157,10 @@ Global
 		{F5BB7380-859D-4087-AA35-58203D9614BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5BB7380-859D-4087-AA35-58203D9614BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5BB7380-859D-4087-AA35-58203D9614BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -179,6 +185,7 @@ Global
 		{B4E96AC2-8C6F-467D-9864-63C3AAE2A602} = {A1AA9098-0B0E-45B4-84E9-8EE4E3860688}
 		{1758456F-230D-4A2B-89AD-A204BA1B68A4} = {A1AA9098-0B0E-45B4-84E9-8EE4E3860688}
 		{F5BB7380-859D-4087-AA35-58203D9614BF} = {A1AA9098-0B0E-45B4-84E9-8EE4E3860688}
+		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B} = {A1AA9098-0B0E-45B4-84E9-8EE4E3860688}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96108C8B-1CFE-440B-9A38-213FAFE10220}

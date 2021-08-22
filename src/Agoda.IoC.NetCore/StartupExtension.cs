@@ -1,5 +1,6 @@
 ﻿using Agoda.IoC.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,15 +29,13 @@ namespace Agoda.IoC.NetCore
             this IServiceCollection services, Assembly[] assemblies,
             ServiceLifetime serviceLifetime,
             bool isMockMode,
-             Action<ContainerRegistrationOption> option = null, 
+             Action<ContainerRegistrationOption> option = null,
             IDictionary<Type, List<KeyTypePair>> keysForTypes = null)
             where T : ContainerRegistrationAttribute
         {
-
-
-        var containerRegistrationOption = new ContainerRegistrationOption();
+            var containerRegistrationOption = new ContainerRegistrationOption();
             option?.Invoke(containerRegistrationOption);
-            
+
             var registrations = assemblies
                 .SelectMany(assembly => assembly.GetExportedTypes())
                 .Where(type => type.IsClass)
@@ -58,35 +57,54 @@ namespace Agoda.IoC.NetCore
 
             foreach (var reg in registrations)
             {
-                var toType = isMockMode && reg.MockType != null
-                    ? reg.MockType
-                    : reg.ToType;
-                // Set up supporting registrations.
-                // Collections is not included here as its supported in netcore ootb
-                if (reg.FactoryType != null)
-                {
-                    services.Add(new ServiceDescriptor(reg.FromType, (x) =>
-                    {
-                        var factoryInstance = Activator.CreateInstance(reg.FactoryType);
-                        var buildMethod = factoryInstance.GetType().GetMethod("Build");
-                        Debug.Assert(buildMethod != null, nameof(buildMethod) + " != null"); // type is checked by RegistrationInfo.Validate()
-
-                        return buildMethod.Invoke(factoryInstance, new[] { new NetCoreComponentResolver(x) });
-
-                    }, serviceLifetime));
-                }
-                else if (reg.Key != null)
+                if (reg.Key != null)
                 {
                     // keyed instances is recorded here for registration later
                     AddToKeyedRegistrationList(reg, keysForTypes, serviceLifetime);
+                    continue;
                 }
+               
+                var toType = isMockMode && reg.MockType != null
+                            ? reg.MockType
+                            : reg.ToType;
+
+                var serviceDescriptor = CreateServiceDescriptor(reg, serviceLifetime, toType);
+                if (reg?.ReplaceServices == true)
+                {
+                    services.Replace(serviceDescriptor);
+                }               
                 else
                 {
-                    services.Add(new ServiceDescriptor(reg.FromType, toType, serviceLifetime));
+                    services.Add(serviceDescriptor);
                 }
-
             }
             return services;
+        }
+
+        /// <summary>
+        /// Create ServiceDescriptor from RegistrationContext
+        /// </summary>
+        /// <param name="registrationContext"></param>
+        /// <param name="serviceLifetime"></param>
+        /// <param name="toType"></param>
+        /// <returns></returns>
+        private static ServiceDescriptor CreateServiceDescriptor(
+            RegistrationContext registrationContext, ServiceLifetime serviceLifetime, Type toType = null)
+        {
+            if (registrationContext.FactoryType != null)
+            {
+                return new ServiceDescriptor(registrationContext.FromType, (x) =>
+                 {
+                     var factoryInstance = Activator.CreateInstance(registrationContext.FactoryType);
+                     var buildMethod = factoryInstance.GetType().GetMethod("Build");
+                     Debug.Assert(buildMethod != null, nameof(buildMethod) + " != null"); // type is checked by RegistrationInfo.Validate()
+
+                     return buildMethod.Invoke(factoryInstance, new[] { new NetCoreComponentResolver(x) });
+
+                 }, serviceLifetime);
+            }
+            _ = toType ?? throw new ArgumentNullException(nameof(toType));
+            return new ServiceDescriptor(registrationContext.FromType, toType, serviceLifetime);
         }
 
         /// <summary>
@@ -97,7 +115,7 @@ namespace Agoda.IoC.NetCore
         {
             if (!keysForTypes.TryGetValue(reg.FromType, out var keys))
             {
-                keysForTypes.Add(reg.FromType, new List<KeyTypePair> {new KeyTypePair(reg.Key, reg.ToType, serviceLifetime) });
+                keysForTypes.Add(reg.FromType, new List<KeyTypePair> { new KeyTypePair(reg.Key, reg.ToType, serviceLifetime) });
             }
             else if (keys.Any(x => x.Key == reg.Key))
             {
@@ -124,7 +142,7 @@ namespace Agoda.IoC.NetCore
                         y => y.Type));
                 services.AddSingleton(regObject, provider => regObjectInstance);
                 services.AddSingleton(keyedFactoryInterfaceType, keyedFactoryImplementationType);
-                services.AddSingleton(typeof(IKeyedComponentResolver<>).MakeGenericType(key.Key),typeof(NetCoreKeyedComponentResolver<>).MakeGenericType(key.Key));
+                services.AddSingleton(typeof(IKeyedComponentResolver<>).MakeGenericType(key.Key), typeof(NetCoreKeyedComponentResolver<>).MakeGenericType(key.Key));
                 foreach (var implementation in key.Value)
                 {
                     services.Add(new ServiceDescriptor(implementation.Type, implementation.Type,
@@ -136,7 +154,8 @@ namespace Agoda.IoC.NetCore
         private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption containerRegistrationOption)
         {
             bool isValid = true;
-            registrations.ForEach(reg => {
+            registrations.ForEach(reg =>
+            {
                 if (!reg.Validation.IsValid)
                 {
                     isValid = false;
@@ -148,7 +167,7 @@ namespace Agoda.IoC.NetCore
             return isValid;
         }
     }
-    
+
     public class NetCoreComponentResolver : IComponentResolver
     {
         private readonly IServiceProvider _serviceProvider;
