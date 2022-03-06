@@ -191,7 +191,7 @@ namespace Agoda.IoC.AutofacExt.UnitTests
         }
 
         [Test]
-        [Ignore("doesnt work in autofac, need to debug as to why")]
+        [Ignore("doesnt work in autofac, seems to not support this type of registration")]
         public void LookforAutowire_IOpenGenericService()
         {
             _container.ComponentRegistry.Registrations
