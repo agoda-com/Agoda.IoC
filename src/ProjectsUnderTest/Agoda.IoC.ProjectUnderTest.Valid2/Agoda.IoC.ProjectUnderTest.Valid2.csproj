@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>Agoda.IoC.ProjectUnderTest.Valid2</RootNamespace>
+		<AssemblyName>Agoda.IoC.ProjectUnderTest.Valid2</AssemblyName>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyTitle>Agoda.IoC.ProjectUnderTest.Valid2</AssemblyTitle>
+		<Product>Agoda.IoC.ProjectUnderTest.Valid2</Product>
+		<Copyright>Copyright ©  2018</Copyright>
+		<IsPackable>false</IsPackable>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugType>full</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>pdbonly</DebugType>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Agoda.Analyzers" Version="1.0.504">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Agoda.IoC.Core\Agoda.IoC.Core.csproj" />
+		<ProjectReference Include="..\Agoda.IoC.ProjectUnderTest.Valid\Agoda.IoC.ProjectUnderTest.Valid.csproj" />
+	</ItemGroup>
+
+</Project>

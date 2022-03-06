@@ -137,7 +137,12 @@ namespace Agoda.IoC.Core
         /// Only types of a single generic argument are supported, which is enough for our use case.
         /// </remarks>
         public Type GenericArgument { get; set; }
-        
+
+        /// <summary>
+        /// ReplaceServices: Set true to replace services if they are already registered before. Uses Replace extension method of IServiceCollection.
+        /// </summary>
+        public bool ReplaceServices { get; set; }
+
         //[EditorBrowsable(EditorBrowsableState.Never)] // uncomment this once all registrations are migrated
         [Obsolete("Use only for legacy registrations migrated from the RegisterRepository() or RegisterService() Unity " +
                   "extensions. For new code use ServerSideTimer.")]

@@ -2,7 +2,7 @@ namespace Agoda.IoC.Core
 {
     public interface IKeyedComponentResolver<out T>
     {
-        T Resolve(object key);
-        bool IsRegistered(object key);
+        T Resolve(string key);
+        bool IsRegistered(string key);
     }
 }

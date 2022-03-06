@@ -5,29 +5,29 @@ namespace Agoda.IoC.Core
     public class KeyedComponentFactory<T> : IKeyedComponentFactory<T>
     {
         private readonly IKeyedComponentResolver<T> _componentResolver;
-        private readonly HashSet<object> _registeredKeys;
+        private readonly HashSet<string> _registeredKeys;
 
         public KeyedComponentFactory(IKeyedComponentResolver<T> componentResolver)
         {
             _componentResolver = componentResolver;
-            _registeredKeys = new HashSet<object>();
+            _registeredKeys = new HashSet<string>();
         }
 
-        public T GetByKey(object key)
+        public T GetByKey(string key)
         {
             return _componentResolver.Resolve(key);
         }
 
-        public bool IsRegistered(object key)
+        public bool IsRegistered(string key)
         {
-            return _registeredKeys.Contains(key);
+            return _componentResolver.IsRegistered(key);
         }
 
-        public T TryGetByKey(object key)
+        public T TryGetByKey(string key)
             => _componentResolver.IsRegistered(key) ? _componentResolver.Resolve(key) : default(T);
 
         // do not want to expose this to consumers so not part of the interface
-        public void RegisterKey(object key)
+        public void RegisterKey(string key)
         {
             _registeredKeys.Add(key);
         }

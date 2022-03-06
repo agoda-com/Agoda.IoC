@@ -2,29 +2,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Agoda.IoC.Core;
 using Agoda.IoC.ProjectUnderTest.Valid;
+using Agoda.IoC.ProjectUnderTest.Valid2;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Shouldly;
 
 namespace Agoda.IoC.NetCore.UnitTests
 {
-
     [TestFixture]
     public class MicrosoftExtensionsDependencyInjectionAutowireTests
     {
         private IServiceCollection _container;
+        private IServiceCollection _notReplaceContainer;
 
         private IServiceCollection _containerMocked;
         [SetUp]
         public void SetUp()
         {
             _container = new ServiceCollection();
+            _notReplaceContainer = new ServiceCollection();
             _container.AutoWireAssembly(new[]
             {
+                typeof(NoAttribute).Assembly,
+                typeof(ReplaceServiceTwoWork).Assembly,
+            }, false);
+            _notReplaceContainer.AutoWireAssembly(new[]
+           {
                 typeof(NoAttribute).Assembly
             }, false);
+
             _containerMocked = new ServiceCollection();
             _containerMocked.AutoWireAssembly(new[]
             {
@@ -36,8 +43,8 @@ namespace Agoda.IoC.NetCore.UnitTests
         public void LookforAutowire_ConcreteImplementation()
         {
             _container
-                .Any(x=>
-                    x.ServiceType == typeof(ConcreteImplementation) 
+                .Any(x =>
+                    x.ServiceType == typeof(ConcreteImplementation)
                     && x.Lifetime == ServiceLifetime.Scoped)
                 .ShouldBeTrue();
         }
@@ -53,7 +60,6 @@ namespace Agoda.IoC.NetCore.UnitTests
                 .ShouldBeTrue();
         }
 
-
         [Test]
         public void LookforAutowire_MockServiceOriginal()
         {
@@ -64,6 +70,7 @@ namespace Agoda.IoC.NetCore.UnitTests
                     && x.Lifetime == ServiceLifetime.Transient)
                 .ShouldBeTrue();
         }
+
         [Test]
         public void LookforAutowire_MockServiceMock()
         {
@@ -224,6 +231,46 @@ namespace Agoda.IoC.NetCore.UnitTests
                     && x.ImplementationFactory != null
                     && x.Lifetime == ServiceLifetime.Transient)
                 .ShouldBeTrue();
+        }
+
+        [Test]
+        public void LookforAutowire_KeyedRegistrationFactoryChecks()
+        {
+            _container
+                .Any(x =>
+                    x.ServiceType == typeof(KeyedFactoryService1)
+                    && x.Lifetime == ServiceLifetime.Singleton)
+                .ShouldBeTrue();
+            _container
+                .Any(x =>
+                    x.ServiceType == typeof(KeyedFactoryService2)
+                    && x.Lifetime == ServiceLifetime.Scoped)
+                .ShouldBeTrue();
+        }
+
+        [Test]
+        public void LookforAutowire_ReplaceServiceChecks()
+        {
+            _container
+                .Any(x =>
+                    x.ServiceType == typeof(IReplaceService)
+                    && x.ImplementationType == typeof(ReplaceServiceTwoWork)
+                    && x.Lifetime == ServiceLifetime.Transient)
+                .ShouldBeTrue();
+
+            _notReplaceContainer
+                .Any(x =>
+                    x.ServiceType == typeof(IReplaceService)
+                    && x.ImplementationType == typeof(ReplaceServiceOneWork)
+                    && x.Lifetime == ServiceLifetime.Transient)
+                .ShouldBeTrue();
+
+
+            var svr = _container.BuildServiceProvider().GetRequiredService<IReplaceService>();
+            svr.DoWork.ShouldBe(nameof(ReplaceServiceTwoWork));
+
+            svr = _notReplaceContainer.BuildServiceProvider().GetRequiredService<IReplaceService>();
+            svr.DoWork.ShouldBe(nameof(ReplaceServiceOneWork));
         }
     }
 }
