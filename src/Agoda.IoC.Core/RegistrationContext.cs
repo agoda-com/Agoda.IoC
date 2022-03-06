@@ -7,6 +7,7 @@ namespace Agoda.IoC.Core
     public class RegistrationContext
     {   
         public Type ToType { get; private set; }
+        
         public Type FromType { get; private set; }
         public bool IsConcrete { get; private set; }
         public Type MockType { get; }

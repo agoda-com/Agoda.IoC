@@ -53,6 +53,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.ProjectUnderTest.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.ProjectUnderTest.Valid", "ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid\Agoda.IoC.ProjectUnderTest.Valid.csproj", "{F5BB7380-859D-4087-AA35-58203D9614BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.IoC.AutofacExt", "Agoda.IoC.AutofacExt\Agoda.IoC.AutofacExt.csproj", "{24A17B90-1D31-4B8A-B29C-02861F43BCEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.IoC.AutofacExt.UnitTests", "Agoda.IoC.AutofacExt.UnitTests\Agoda.IoC.AutofacExt.UnitTests.csproj", "{3E37953F-6959-435A-AE24-9CBD8B8F5DA4}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.IoC.ProjectUnderTest.Valid2", "ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid2\Agoda.IoC.ProjectUnderTest.Valid2.csproj", "{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}"
 EndProject
 Global
@@ -157,6 +161,14 @@ Global
 		{F5BB7380-859D-4087-AA35-58203D9614BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5BB7380-859D-4087-AA35-58203D9614BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5BB7380-859D-4087-AA35-58203D9614BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24A17B90-1D31-4B8A-B29C-02861F43BCEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24A17B90-1D31-4B8A-B29C-02861F43BCEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24A17B90-1D31-4B8A-B29C-02861F43BCEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24A17B90-1D31-4B8A-B29C-02861F43BCEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E37953F-6959-435A-AE24-9CBD8B8F5DA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E37953F-6959-435A-AE24-9CBD8B8F5DA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E37953F-6959-435A-AE24-9CBD8B8F5DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E37953F-6959-435A-AE24-9CBD8B8F5DA4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Release|Any CPU.ActiveCfg = Release|Any CPU

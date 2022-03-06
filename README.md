@@ -113,6 +113,11 @@ Below example demonstrates using attributes to indicate a mock option for a regi
     public class ServiceWithMock : IServiceWithMock {}
 
 ```
+## Autofac support?
+
+A lot of the functionality of this library is already in autofac, the reason for adding autofac support was to allow easier migration of some of our net framework projects to netcore using this library.
+
+Autofac functionality is does not include support for open generic service registration. 
 
 ## A Unity 3.5 Project?
 
