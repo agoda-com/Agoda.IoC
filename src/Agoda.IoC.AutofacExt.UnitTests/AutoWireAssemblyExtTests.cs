@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Agoda.IoC.ProjectUnderTest.Valid;
+using Agoda.IoC.ProjectUnderTest.Valid2;
 using Autofac;
 using Autofac.Core;
 using Autofac.Core.Lifetime;
@@ -27,13 +28,17 @@ namespace Agoda.IoC.AutofacExt.UnitTests
             _containerBuilder = new ContainerBuilder();
             _container = _containerBuilder.AutoWireAssembly(new[]
             {
-                typeof(NoAttribute).Assembly
-            }, false).Build();
+                typeof(NoAttribute).Assembly,
+                typeof(ServiceThatStartsUp).Assembly
+            }, false).Build()
+                .UseStartupable();
             _containerBuilderMocked = new ContainerBuilder();
             _containerMocked = _containerBuilderMocked.AutoWireAssembly(new[]
             {
-                typeof(NoAttribute).Assembly
-            }, true).Build();
+                typeof(NoAttribute).Assembly,
+                typeof(ServiceThatStartsUp).Assembly
+            }, true).Build()
+                .UseStartupable();
         }
 
         [Test]
@@ -234,6 +239,12 @@ namespace Agoda.IoC.AutofacExt.UnitTests
                     && x.Activator.LimitType != null
                     && x.Lifetime is CurrentScopeLifetime)
                 .ShouldBeTrue();
+        }
+
+        [Test]
+        public void WhenRegistarteStartupableClass_ShouldRunStartupmethods()
+        {
+            _container.Resolve<IServiceThatStartsUp>().Somedata.ShouldBe(1);
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Agoda.IoC.Core;
 using Autofac;
+using Autofac.Core;
 
 namespace Agoda.IoC.AutofacExt
 {
@@ -87,7 +89,6 @@ namespace Agoda.IoC.AutofacExt
                             if (toType.IsGenericTypeDefinition)
                             {
                                 services.RegisterGeneric(toType).As(reg.FromType).SingleInstance();
-
                             }
                             else
                             {
@@ -106,5 +107,28 @@ namespace Agoda.IoC.AutofacExt
             }
             return services;
         }
+
+        public static IContainer UseStartupable(this IContainer container)
+        {
+            var listOfStartupableServiceRegistrations =
+                container.ComponentRegistry.Registrations
+                    .Where(x => typeof(IStartupable).IsAssignableFrom(x.Target.Activator.LimitType))
+                    .SelectMany(y => y.Services);
+                
+            foreach (var StartupableService in listOfStartupableServiceRegistrations)
+            {
+                ((IStartupable)container.ResolveService(StartupableService)).Start();
+            }
+
+            return container;
+        }
+
+
+        private static bool ContainsType(IEnumerable<Autofac.Core.Service> services, Type t)
+        {
+            return services.Where(y => y is TypedService)
+                .Any(z => ((TypedService)z).ServiceType == t);
+        }
+
     }
 }

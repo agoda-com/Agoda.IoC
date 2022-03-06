@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Agoda.IoC.Core\Agoda.IoC.Core.csproj" />
     <ProjectReference Include="..\Agoda.IoC.AutofacExt\Agoda.IoC.AutofacExt.csproj" />
+    <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid2\Agoda.IoC.ProjectUnderTest.Valid2.csproj" />
     <ProjectReference Include="..\ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid\Agoda.IoC.ProjectUnderTest.Valid.csproj" />
   </ItemGroup>
 
