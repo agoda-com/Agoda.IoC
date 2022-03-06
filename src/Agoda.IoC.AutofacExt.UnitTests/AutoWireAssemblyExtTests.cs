@@ -31,14 +31,14 @@ namespace Agoda.IoC.AutofacExt.UnitTests
                 typeof(NoAttribute).Assembly,
                 typeof(ServiceThatStartsUp).Assembly
             }, false).Build()
-                .UseStartupable();
+                .UseAgodaIoCStartupable();
             _containerBuilderMocked = new ContainerBuilder();
             _containerMocked = _containerBuilderMocked.AutoWireAssembly(new[]
             {
                 typeof(NoAttribute).Assembly,
                 typeof(ServiceThatStartsUp).Assembly
             }, true).Build()
-                .UseStartupable();
+                .UseAgodaIoCStartupable();
         }
 
         [Test]

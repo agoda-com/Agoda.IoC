@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Agoda.IoC.Core;
 using Agoda.IoC.ProjectUnderTest.Valid;
 using Agoda.IoC.ProjectUnderTest.Valid2;
 using Microsoft.Extensions.DependencyInjection;
@@ -271,6 +272,13 @@ namespace Agoda.IoC.NetCore.UnitTests
 
             svr = _notReplaceContainer.BuildServiceProvider().GetRequiredService<IReplaceService>();
             svr.DoWork.ShouldBe(nameof(ReplaceServiceOneWork));
+        }
+        [Test]
+        public void WhenRegistarteStartupableClass_ShouldRunStartupmethods()
+        {
+            var app = _container.BuildServiceProvider();
+            app.UseAgodaIoCStartupable();
+            app.GetService<IServiceThatStartsUp>().Somedata.ShouldBe(1);
         }
     }
 }

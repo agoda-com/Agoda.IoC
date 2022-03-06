@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Agoda.IoC.NetCore
 {
@@ -23,6 +24,18 @@ namespace Agoda.IoC.NetCore
                 .AutoWireAssembly<RegisterTransientAttribute>(assemblies, ServiceLifetime.Transient, isMockMode, option, keysForTypes);
             services.RegisterKeyedFactory(keysForTypes);
             return rtn;
+        }
+
+        public static IServiceProvider UseAgodaIoCStartupable(this IServiceProvider app)
+        {
+            foreach (var startupable in app.GetServices<IStartupable>())
+            {
+                if (startupable == null)
+                    throw new Exception(
+                        "No service found that inherit from IStartupable but UseAgodaIoCStartupable was called");
+                startupable.Start();
+            }
+            return app;
         }
 
         public static IServiceCollection AutoWireAssembly<T>(
@@ -76,6 +89,13 @@ namespace Agoda.IoC.NetCore
                 else
                 {
                     services.Add(serviceDescriptor);
+                }
+
+                if (reg.IsStartupable)
+                {
+                    services.Add(new ServiceDescriptor(typeof(IStartupable),
+                        x => x.GetService(reg.FromType),
+                        ServiceLifetime.Singleton));
                 }
             }
             return services;
@@ -165,22 +185,6 @@ namespace Agoda.IoC.NetCore
                 }
             });
             return isValid;
-        }
-    }
-
-    public class NetCoreComponentResolver : IComponentResolver
-    {
-        private readonly IServiceProvider _serviceProvider;
-
-        public NetCoreComponentResolver(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
-
-        public T Resolve<T>()
-        {
-            return _serviceProvider.GetService<T>();
-
         }
     }
 }

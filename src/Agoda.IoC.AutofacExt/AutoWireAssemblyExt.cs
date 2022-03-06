@@ -108,7 +108,7 @@ namespace Agoda.IoC.AutofacExt
             return services;
         }
 
-        public static IContainer UseStartupable(this IContainer container)
+        public static IContainer UseAgodaIoCStartupable(this IContainer container)
         {
             var listOfStartupableServiceRegistrations =
                 container.ComponentRegistry.Registrations
