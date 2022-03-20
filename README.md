@@ -129,7 +129,7 @@ Reflection is not slow, it's pretty fast in C# actually. Where you will hit prob
 
 ## How to get started?
 
-All of the lines liek this in your startup
+All of the lines like this in your startup
 
 ```csharp
 services.AddSingleton<IService , Service>();
@@ -154,13 +154,13 @@ services.AddScoped<>(); // [RegisterPerRequest]
 services.AddSingleton<>(); // [RegisterSingleton]
 ```
 
-If the class inheirt's from multiple Interfaces, use the "For" proeprty on teh attribute
+If the class inherit's from multiple Interfaces, use the "For" proeprty on the attribute
 
 ```csharp
     [RegisterSingleton(For = typeof(IMultipleAttributes1))]
 ```
 
-This should cover most common use cases, for more complex one's you'll need to use the other attribute options
+This should cover most common use cases, for more complex one's you'll need to use the other attribute options metioned above.
 
 
 ## Dedication
