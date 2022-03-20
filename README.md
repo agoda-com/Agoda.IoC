@@ -129,6 +129,12 @@ Reflection is not slow, it's pretty fast in C# actually. Where you will hit prob
 
 ## How to get started?
 
+Install the nuget package into your csproj project file
+
+```bash
+dotnet add package Agoda.IoC.NetCore
+```
+
 Add the library into your startup.cs
 
 ```csharp
