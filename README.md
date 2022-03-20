@@ -127,5 +127,41 @@ Some of the old legacy systems at Agoda run an old version of unity, and this li
 
 Reflection is not slow, it's pretty fast in C# actually. Where you will hit problems with reflection and speed is if you are doing thousands or millions of operations, like in a http request on a busy website, using it at startup like this you are doing very few operations and only when the application starts.
 
+## How to get started?
+
+All of the lines like this in your startup
+
+```csharp
+services.AddSingleton<IService , Service>();
+```
+
+Can be removed, and each one that you remove, find the class and add the appropriate attribute
+
+```csharp
+
+    [RegisterSingleton] ///add this line
+    public class Service : IService 
+    {
+    // code that does something
+    }
+
+```
+For net core the mappings of registration method to attribute are
+
+```csharp
+services.AddTransient<>(); // [RegisterTransient]
+services.AddScoped<>(); // [RegisterPerRequest]
+services.AddSingleton<>(); // [RegisterSingleton]
+```
+
+If the class inherit's from multiple Interfaces, use the "For" proeprty on the attribute
+
+```csharp
+    [RegisterSingleton(For = typeof(IMultipleAttributes1))]
+```
+
+This should cover most common use cases, for more complex one's you'll need to use the other attribute options metioned above.
+
+
 ## Dedication
 A large amount of the code in this repository was written by Michael Alastair Chamberlain who is no longer with us, so it is with this community contribution we remember him.
