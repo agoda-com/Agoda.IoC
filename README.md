@@ -129,6 +129,18 @@ Reflection is not slow, it's pretty fast in C# actually. Where you will hit prob
 
 ## How to get started?
 
+Add the library into your startup.cs
+
+```csharp
+      services.AutoWireAssembly(new[]{typeof(Startup).Assembly}, isMockMode);
+```
+
+or for net 6 minimal API Program.cs
+
+```csharp
+      builder.Services.AutoWireAssembly(new[]{typeof(Startup).Assembly}, isMockMode);
+```
+
 All of the lines like this in your startup
 
 ```csharp
