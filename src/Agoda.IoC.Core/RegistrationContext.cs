@@ -19,7 +19,7 @@ namespace Agoda.IoC.Core
 
         public bool ReplaceServices { get; }
         public (bool IsValid, string ErrorMessage) Validation { get; }
-
+        public bool IsStartupable { get; private set; }
         private readonly IList<Type> _baseTypes;
         private readonly Type _originalToType;
         private readonly Type _genericArgument;
@@ -42,7 +42,7 @@ namespace Agoda.IoC.Core
             IsIntercepted = wrapper?.HasInterceptors(this) ?? false;
             _genericArgument = attribute.GenericArgument;            
             _baseTypes = ContainerAttributeUtils.GetBaseTypes(attribute, toType).ToList();
-            
+            IsStartupable = typeof(IStartupable).IsAssignableFrom(toType);
             // we might have to fiddle with the ToType to keep Unity happy, so we keep a copy of the original for error reporting
             _originalToType = ToType;
 
