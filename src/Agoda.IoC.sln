@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30517.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.Core", "Agoda.IoC.Core\Agoda.IoC.Core.csproj", "{4DC0973E-EB1F-45FC-B21B-E6A22A22B75C}"
 EndProject
@@ -53,11 +53,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.ProjectUnderTest.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.ProjectUnderTest.Valid", "ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid\Agoda.IoC.ProjectUnderTest.Valid.csproj", "{F5BB7380-859D-4087-AA35-58203D9614BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.IoC.AutofacExt", "Agoda.IoC.AutofacExt\Agoda.IoC.AutofacExt.csproj", "{24A17B90-1D31-4B8A-B29C-02861F43BCEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.AutofacExt", "Agoda.IoC.AutofacExt\Agoda.IoC.AutofacExt.csproj", "{24A17B90-1D31-4B8A-B29C-02861F43BCEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.IoC.AutofacExt.UnitTests", "Agoda.IoC.AutofacExt.UnitTests\Agoda.IoC.AutofacExt.UnitTests.csproj", "{3E37953F-6959-435A-AE24-9CBD8B8F5DA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.AutofacExt.UnitTests", "Agoda.IoC.AutofacExt.UnitTests\Agoda.IoC.AutofacExt.UnitTests.csproj", "{3E37953F-6959-435A-AE24-9CBD8B8F5DA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.IoC.ProjectUnderTest.Valid2", "ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid2\Agoda.IoC.ProjectUnderTest.Valid2.csproj", "{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.ProjectUnderTest.Valid2", "ProjectsUnderTest\Agoda.IoC.ProjectUnderTest.Valid2\Agoda.IoC.ProjectUnderTest.Valid2.csproj", "{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.IoC.ProjectUnderTest.AutofacStartable", "Agoda.IoC.ProjectUnderTest.AutofacStartable\Agoda.IoC.ProjectUnderTest.AutofacStartable.csproj", "{28CC89A3-61E0-4972-B0B3-DCB41A86E7F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +175,10 @@ Global
 		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28CC89A3-61E0-4972-B0B3-DCB41A86E7F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28CC89A3-61E0-4972-B0B3-DCB41A86E7F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28CC89A3-61E0-4972-B0B3-DCB41A86E7F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28CC89A3-61E0-4972-B0B3-DCB41A86E7F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,6 +204,7 @@ Global
 		{1758456F-230D-4A2B-89AD-A204BA1B68A4} = {A1AA9098-0B0E-45B4-84E9-8EE4E3860688}
 		{F5BB7380-859D-4087-AA35-58203D9614BF} = {A1AA9098-0B0E-45B4-84E9-8EE4E3860688}
 		{4F9A3CE2-B770-4FBB-ACBD-A4E94839C26B} = {A1AA9098-0B0E-45B4-84E9-8EE4E3860688}
+		{28CC89A3-61E0-4972-B0B3-DCB41A86E7F8} = {A1AA9098-0B0E-45B4-84E9-8EE4E3860688}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96108C8B-1CFE-440B-9A38-213FAFE10220}

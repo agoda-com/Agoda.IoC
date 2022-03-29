@@ -87,11 +87,23 @@ namespace Agoda.IoC.AutofacExt
                             if (toType.IsGenericTypeDefinition)
                             {
                                 services.RegisterGeneric(toType).As(reg.FromType).SingleInstance();
-
                             }
                             else
                             {
-                                services.RegisterType(toType).As(reg.FromType).SingleInstance();
+                                
+                                if (toType.GetInterfaces().Any(x => x == typeof(IStartable)))
+                                {
+                                    services.RegisterType(toType)
+                                        .As(reg.FromType)
+                                        .As(typeof(IStartable))
+                                        .SingleInstance();
+                                }
+                                else
+                                {
+                                    services.RegisterType(toType)
+                                        .As(reg.FromType)
+                                        .SingleInstance();
+                                }
                             }
                             break;
                         case "RegisterPerRequestAttribute":
