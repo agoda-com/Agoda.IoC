@@ -15,7 +15,7 @@ env:
 jobs:
   build:
     name: Build Package 
-    runs-on: windows-2016 # using windows agent for net472 build.
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
