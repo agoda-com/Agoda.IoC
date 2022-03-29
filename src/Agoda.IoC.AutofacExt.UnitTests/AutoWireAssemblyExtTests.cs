@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Agoda.IoC.ProjectUnderTest.AutofacStartable;
 using Agoda.IoC.ProjectUnderTest.Valid;
 using Autofac;
 using Autofac.Core;
@@ -27,13 +28,22 @@ namespace Agoda.IoC.AutofacExt.UnitTests
             _containerBuilder = new ContainerBuilder();
             _container = _containerBuilder.AutoWireAssembly(new[]
             {
-                typeof(NoAttribute).Assembly
+                typeof(NoAttribute).Assembly,
+                typeof(StartupClass).Assembly
             }, false).Build();
             _containerBuilderMocked = new ContainerBuilder();
             _containerMocked = _containerBuilderMocked.AutoWireAssembly(new[]
             {
-                typeof(NoAttribute).Assembly
+                typeof(NoAttribute).Assembly,
+                typeof(StartupClass).Assembly
             }, true).Build();
+        }
+
+        [Test]
+        public void GivenAutofacStartable_ShouldRunStartupMethod()
+        {
+            _container.Resolve<IStartupClass>().IsStarted.ShouldBeTrue();
+            _container.Resolve<IStartupClass2>().IsStarted.ShouldBeTrue();
         }
 
         [Test]
