@@ -22,7 +22,7 @@ namespace Agoda.IoC.AutofacExt
             where T : ContainerRegistrationAttribute
         {
             var registrations = assemblies
-                .SelectMany(assembly => assembly.GetExportedTypes())
+                .SelectMany(assembly => AssemblyHelper.GetAllTypes(assembly))
                 .Where(type => type.IsClass)
                 .Select(type => new
                 {

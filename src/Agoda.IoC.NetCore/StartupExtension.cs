@@ -37,7 +37,7 @@ namespace Agoda.IoC.NetCore
             option?.Invoke(containerRegistrationOption);
 
             var registrations = assemblies
-                .SelectMany(assembly => assembly.GetExportedTypes())
+                .SelectMany(assembly => AssemblyHelper.GetAllTypes(assembly))
                 .Where(type => type.IsClass)
                 .Select(type => new
                 {

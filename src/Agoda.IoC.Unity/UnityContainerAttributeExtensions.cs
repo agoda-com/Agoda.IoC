@@ -61,7 +61,7 @@ namespace Agoda.IoC.Unity
         {
             // Look for all classes in the given assemblies that are decorated with a ContainerRegistrationAttribute
             var registrations = assemblies
-                .SelectMany(assembly => assembly.GetExportedTypes())
+                .SelectMany(assembly => AssemblyHelper.GetAllTypes(assembly))
                 .Where(type => type.IsClass)
                 .Select(type => new
                 {
