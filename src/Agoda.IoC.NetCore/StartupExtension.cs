@@ -38,7 +38,7 @@ namespace Agoda.IoC.NetCore
 
             var registrations = assemblies
                 .SelectMany(assembly => AssemblyHelper.GetAllTypes(assembly))
-                .Where(type => type.IsClass)
+                .Where(type => type != null && type.IsClass)
                 .Select(type => new
                 {
                     ToType = type,
