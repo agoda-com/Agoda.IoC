@@ -73,8 +73,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.Generator.UnitTes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{B347B416-BB15-4E75-B36E-AFBA9602C6A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.Generator.IntegrationTest1", "Generator\IntegrationTests\Agoda.IoC.Generator.IntegrationTest1\Agoda.IoC.Generator.IntegrationTest1.csproj", "{05EA5C67-4461-4116-BC8E-DC681062F73F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -205,10 +203,6 @@ Global
 		{6EA95568-6CDA-40B5-A207-19043852DE9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EA95568-6CDA-40B5-A207-19043852DE9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EA95568-6CDA-40B5-A207-19043852DE9E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05EA5C67-4461-4116-BC8E-DC681062F73F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05EA5C67-4461-4116-BC8E-DC681062F73F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05EA5C67-4461-4116-BC8E-DC681062F73F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05EA5C67-4461-4116-BC8E-DC681062F73F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -240,7 +234,6 @@ Global
 		{C911102C-F2E9-45E1-B50B-C8784994C2F4} = {D11AA066-46E1-462A-97D3-2989347B352B}
 		{6EA95568-6CDA-40B5-A207-19043852DE9E} = {C911102C-F2E9-45E1-B50B-C8784994C2F4}
 		{B347B416-BB15-4E75-B36E-AFBA9602C6A2} = {D11AA066-46E1-462A-97D3-2989347B352B}
-		{05EA5C67-4461-4116-BC8E-DC681062F73F} = {B347B416-BB15-4E75-B36E-AFBA9602C6A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96108C8B-1CFE-440B-9A38-213FAFE10220}
