@@ -57,7 +57,7 @@ jobs:
     - uses: codecov/codecov-action@v1
       with:
         files: src/Agoda.IoC.Unity.UnitTests/results.cobertura.xml,src/Agoda.IoC.Unity.NetCore/results.cobertura.xml,src/Agoda.IoC.Unity.AutofacExt/results.cobertura.xml  # optional
-        fail_ci_if_error: false # optional (default = false)
+        fail_ci_if_error: true # optional (default = false)
 
   deploy:
     needs: build
