@@ -71,8 +71,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.Generator.UnitTests", "Generator\UnitTests\Agoda.IoC.Generator.UnitTests\Agoda.IoC.Generator.UnitTests.csproj", "{6EA95568-6CDA-40B5-A207-19043852DE9E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{B347B416-BB15-4E75-B36E-AFBA9602C6A2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -233,7 +231,6 @@ Global
 		{512A5192-2378-4322-BA79-54B3607B381C} = {D11AA066-46E1-462A-97D3-2989347B352B}
 		{C911102C-F2E9-45E1-B50B-C8784994C2F4} = {D11AA066-46E1-462A-97D3-2989347B352B}
 		{6EA95568-6CDA-40B5-A207-19043852DE9E} = {C911102C-F2E9-45E1-B50B-C8784994C2F4}
-		{B347B416-BB15-4E75-B36E-AFBA9602C6A2} = {D11AA066-46E1-462A-97D3-2989347B352B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96108C8B-1CFE-440B-9A38-213FAFE10220}
