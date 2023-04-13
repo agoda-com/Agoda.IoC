@@ -3,7 +3,6 @@
 namespace Agoda.IoC.Generator.UnitTests;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 public class ContainerRegistrationGeneratorMixLifetimeTests
 {
     private static IEnumerable<TestCaseData> ContainerRegistrationGeneratorTestDatas()
@@ -76,11 +75,6 @@ serviceCollection.AddSingleton(sp => new ClassCImplementationFactory().Factory(s
 serviceCollection.Replace(new ServiceDescriptor(typeof(ReplaceA), ServiceLifetime.Transient));
 serviceCollection.AddScoped(typeof(IThing<, >), typeof(GenericThing<, >));
 return serviceCollection;");
-        yield return new TestCaseData();
-        yield return new TestCaseData();
-        yield return new TestCaseData();
-        yield return new TestCaseData();
-        yield return new TestCaseData();
     }
     [Test, TestCaseSource("ContainerRegistrationGeneratorTestDatas")]
     public void Should_Generate_AddScoped_Correctly(string source, string generatedBodyMethod)

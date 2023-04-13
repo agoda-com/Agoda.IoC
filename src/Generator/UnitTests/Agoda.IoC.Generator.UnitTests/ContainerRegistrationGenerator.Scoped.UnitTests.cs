@@ -4,7 +4,6 @@ using System.Collections;
 namespace Agoda.IoC.Generator.UnitTests;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 public class ContainerRegistrationGeneratorScopedUnitTests
 {
     private static IEnumerable<TestCaseData> ContainerRegistrationGeneratorTestDatas()

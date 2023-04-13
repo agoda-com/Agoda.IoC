@@ -3,7 +3,6 @@ using Agoda.IoC.Generator.UnitTests.Helpers;
 namespace Agoda.IoC.Generator.UnitTests;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 public class ContainerRegistrationGeneratorSingletonUnitTests
 {
     private static IEnumerable<TestCaseData> ContainerRegistrationGeneratorTestDatas()
