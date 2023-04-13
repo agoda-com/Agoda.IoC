@@ -190,6 +190,7 @@ internal class RegistrationDescriptor
                             registrationContext.ForType = registrationContext.IsOpenGeneric
                                                          ? $"{forAttribute.Name}<{new string(',', forAttribute.TypeArguments.Length - 1)}>"
                                                          : forAttribute.Name;
+                            NameSpaces.Add(forAttribute.ContainingNamespace.ToDisplayString());
                             registrationContext.ConcreteType = registrationContext.IsOpenGeneric
                                                         ? $"{_registrationSymbol.Name}<{new string(',', forAttribute.TypeArguments.Length - 1)}>"
                                                         : _registrationSymbol.Name;
