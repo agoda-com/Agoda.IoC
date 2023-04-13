@@ -1,45 +1,30 @@
 using Agoda.IoC.Generator.UnitTests.Helpers;
-using System.Collections;
 
 namespace Agoda.IoC.Generator.UnitTests;
 
+[TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class ContainerRegistrationGeneratorSingletonUnitTests
 {
-    [Theory, ClassData(typeof(SingletonTestDatas))]
-    public void Should_Generate_AddSingleton_Correctly(string source, string generatedBodyMethod)
+    private static IEnumerable<TestCaseData> ContainerRegistrationGeneratorTestDatas()
     {
-        TestHelper.GenerateAgodaIoC(source)
-                .Should()
-                .HaveMethodCount(2)
-                .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
-                .HaveMethodBody("Register", generatedBodyMethod);
-    }
-}
-
-internal class SingletonTestDatas : IEnumerable<object[]>
-{
-    private readonly List<object[]> _data = new List<object[]>
-    {
-        //Should_Generate_AddSingleton_With_Concrete_Type
-        new object[] { @"
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterSingleton]
 public class ClassA{
 }
 ", @"serviceCollection.AddSingleton<ClassA>();
-return serviceCollection;" },
-        // Should_Generate_AddSingleton_Concrete_With_Concrete_Type
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterSingleton(Concrete = true)]
 public class ClassA{
 }
 ", @"serviceCollection.AddSingleton<ClassA>();
-return serviceCollection;"},
-        //Should_Generate_AddSingleton_With_Interface
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
     [RegisterSingleton(For = typeof(IPartialClassTest2))]
@@ -51,9 +36,8 @@ namespace Agoda.IoC.Generator.UnitTests;
     {
     }
 ", @"serviceCollection.AddSingleton<IPartialClassTest2, PartialClassTest2>();
-return serviceCollection;"},
-        //Should_Generate_AddSingleton_Factory_With_Interface
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterSingleton( Factory = typeof(ClassBImplementationFactory))]
@@ -71,9 +55,8 @@ public class ClassBImplementationFactory : IImplementationFactory<IClassB>
     }
 }
 ", @"serviceCollection.AddSingleton(sp => new ClassBImplementationFactory().Factory(sp));
-return serviceCollection;"},
-        //Should_Generate_AddSingleton_Factory_With_Concrete
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterSingleton( Factory = typeof(ClassBImplementationFactory))]
@@ -91,9 +74,8 @@ public class ClassBImplementationFactory : IImplementationFactory<ClassB>
     }
 }
 ", @"serviceCollection.AddSingleton(sp => new ClassBImplementationFactory().Factory(sp));
-return serviceCollection;"},
-        //Should_Generate_AddSingleton_With_Open_Generic
-         new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
     public interface IThing<T,U>
@@ -113,16 +95,15 @@ namespace Agoda.IoC.Generator.UnitTests;
         public string GetNameU { get; }
     }
 ", @"serviceCollection.AddSingleton(typeof(IThing<, >), typeof(GenericThing<, >));
-return serviceCollection;"},
-    };
-
-    public IEnumerator<object[]> GetEnumerator()
-    {
-        return _data.GetEnumerator();
+return serviceCollection;");
     }
-
-    IEnumerator IEnumerable.GetEnumerator()
+    [Test, TestCaseSource("ContainerRegistrationGeneratorTestDatas")]
+    public void Should_Generate_AddSingleton_Correctly(string source, string generatedBodyMethod)
     {
-        { return GetEnumerator(); }
+        TestHelper.GenerateAgodaIoC(source)
+                .Should()
+                .HaveMethodCount(2)
+                .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
+                .HaveMethodBody("Register", generatedBodyMethod);
     }
 }

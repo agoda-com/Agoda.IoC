@@ -1,28 +1,14 @@
 ﻿using Agoda.IoC.Generator.UnitTests.Helpers;
-using System.Collections;
 
-namespace Agoda.IoC.Generator.UnitTests
+namespace Agoda.IoC.Generator.UnitTests;
+
+[TestFixture]
+[Parallelizable(ParallelScope.All)]
+public class ContainerRegistrationGeneratorMixLifetimeTests
 {
-    public class ContainerRegistrationGeneratorMixLifetimeTests
+    private static IEnumerable<TestCaseData> ContainerRegistrationGeneratorTestDatas()
     {
-        [Theory, ClassData(typeof(MixTestDatas))]
-        public void Should_Generate_AddScoped_Correctly(string source, string generatedBodyMethod)
-        {
-            TestHelper.GenerateAgodaIoC(source)
-                    .Should()
-                    .HaveMethodCount(2)
-                    .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
-                    .HaveMethodBody("Register", generatedBodyMethod);
-        }
-    }
-
-
-    internal class MixTestDatas : IEnumerable<object[]>
-    {
-        private readonly List<object[]> _data = new List<object[]>
-    {
-            // case 1
-        new object[] { @"
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 
@@ -36,11 +22,8 @@ public class ClassB{
 
 ", @"serviceCollection.AddScoped<ClassA>();
 serviceCollection.Replace(new ServiceDescriptor(typeof(ClassB), ServiceLifetime.Scoped));
-return serviceCollection;",
-
-        },
-        // case 2
-          new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterScoped(Factory = typeof(ClassBImplementationFactory))]
@@ -87,22 +70,25 @@ public class GenericThing<T, U> : IThing<T, U>
     public string GetNameT { get; }
     public string GetNameU { get; }
 }
-", 
+",
 @"serviceCollection.AddScoped(sp => new ClassBImplementationFactory().Factory(sp));
 serviceCollection.AddSingleton(sp => new ClassCImplementationFactory().Factory(sp));
 serviceCollection.Replace(new ServiceDescriptor(typeof(ReplaceA), ServiceLifetime.Transient));
 serviceCollection.AddScoped(typeof(IThing<, >), typeof(GenericThing<, >));
-return serviceCollection;" },
-    };
-
-        public IEnumerator<object[]> GetEnumerator()
-        {
-            return _data.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            { return GetEnumerator(); }
-        }
+return serviceCollection;");
+        yield return new TestCaseData();
+        yield return new TestCaseData();
+        yield return new TestCaseData();
+        yield return new TestCaseData();
+        yield return new TestCaseData();
+    }
+    [Test, TestCaseSource("ContainerRegistrationGeneratorTestDatas")]
+    public void Should_Generate_AddScoped_Correctly(string source, string generatedBodyMethod)
+    {
+        TestHelper.GenerateAgodaIoC(source)
+                .Should()
+                .HaveMethodCount(2)
+                .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
+                .HaveMethodBody("Register", generatedBodyMethod);
     }
 }

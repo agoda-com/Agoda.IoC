@@ -1,55 +1,38 @@
 using Agoda.IoC.Generator.UnitTests.Helpers;
-using System.Collections;
 
 namespace Agoda.IoC.Generator.UnitTests;
 
+[TestFixture]
+[Parallelizable(ParallelScope.All)]
 public class ContainerRegistrationGeneratorTransientUnitTests
 {
-    [Theory, ClassData(typeof(TransientTestDatas))]
-    public void Should_Generate_AddTransient_Correctly(string source, string generatedBodyMethod)
+    private static IEnumerable<TestCaseData> ContainerRegistrationGeneratorTestDatas()
     {
-        TestHelper.GenerateAgodaIoC(source)
-                .Should()
-                .HaveMethodCount(2)
-                .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
-                .HaveMethodBody("Register", generatedBodyMethod);
-    }
-}
-
-internal class TransientTestDatas : IEnumerable<object[]>
-{
-    private readonly List<object[]> _data = new List<object[]>
-    {
-        //Should_Generate_AddScoped_With_Concrete_Type
-        new object[] { @"
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterTransient]
 public class ClassA{
 }
 ", @"serviceCollection.AddTransient<ClassA>();
-return serviceCollection;" },
-        // Should_Generate_AddScoped_Concrete_With_Concrete_Type
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterTransient]
 public class ClassA{
 }
 ", @"serviceCollection.AddTransient<ClassA>();
-return serviceCollection;"},
-
-        // Should_Generate_AddScoped_Concrete_With_Concrete_Type_Using_Replace
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterTransient(ReplaceService = true)]
 public class ClassA{
 }
 ", @"serviceCollection.Replace(new ServiceDescriptor(typeof(ClassA), ServiceLifetime.Transient));
-return serviceCollection;"},
-                // Should_Generate_AddScoped_Interface_With_Concrete_Type_Using_Replace
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterTransient(ReplaceService = true, For = typeof(IClassA))]
@@ -58,20 +41,16 @@ public class ClassA : IClassA{
 public interface IClassA{
 }
 ", @"serviceCollection.Replace(new ServiceDescriptor(typeof(IClassA), typeof(ClassA), ServiceLifetime.Transient));
-return serviceCollection;"},
-
-        // Should_Generate_AddScoped_Concrete_With_Concrete_Type
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterTransient(Concrete = true)]
 public class ClassA{
 }
 ", @"serviceCollection.AddTransient<ClassA>();
-return serviceCollection;"},
-
-        //Should_Generate_AddScoped_With_Interface
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
     [RegisterTransient(For = typeof(IPartialClassTest2))]
@@ -83,9 +62,8 @@ namespace Agoda.IoC.Generator.UnitTests;
     {
     }
 ", @"serviceCollection.AddTransient<IPartialClassTest2, PartialClassTest2>();
-return serviceCollection;"},
-        //Should_Generate_AddScoped_Factory_With_Interface
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterTransient( Factory = typeof(ClassBImplementationFactory))]
@@ -103,9 +81,8 @@ public class ClassBImplementationFactory : IImplementationFactory<IClassB>
     }
 }
 ", @"serviceCollection.AddTransient(sp => new ClassBImplementationFactory().Factory(sp));
-return serviceCollection;"},
-        //Should_Generate_AddScoped_Factory_With_Concrete
-        new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterTransient( Factory = typeof(ClassBImplementationFactory))]
@@ -123,9 +100,8 @@ public class ClassBImplementationFactory : IImplementationFactory<ClassB>
     }
 }
 ", @"serviceCollection.AddTransient(sp => new ClassBImplementationFactory().Factory(sp));
-return serviceCollection;"},
-        //Should_Generate_AddScoped_With_Open_Generic
-         new object[] { @"
+return serviceCollection;");
+        yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
     public interface IThing<T,U>
@@ -145,17 +121,16 @@ namespace Agoda.IoC.Generator.UnitTests;
         public string GetNameU { get; }
     }
 ", @"serviceCollection.AddTransient(typeof(IThing<, >), typeof(GenericThing<, >));
-return serviceCollection;"},
-
-    };
-
-    public IEnumerator<object[]> GetEnumerator()
-    {
-        return _data.GetEnumerator();
+return serviceCollection;");
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
+    [Test, TestCaseSource("ContainerRegistrationGeneratorTestDatas")]
+    public void Should_Generate_AddTransient_Correctly(string source, string generatedBodyMethod)
     {
-        { return GetEnumerator(); }
+        TestHelper.GenerateAgodaIoC(source)
+                .Should()
+                .HaveMethodCount(2)
+                .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
+                .HaveMethodBody("Register", generatedBodyMethod);
     }
 }
