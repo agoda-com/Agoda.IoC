@@ -20,7 +20,25 @@ return serviceCollection;" );
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
+[RegisterPerRequest]
+public class ClassA{
+}
+", @"serviceCollection.AddScoped<ClassA>();
+return serviceCollection;");
+
+        yield return new TestCaseData(@"
+using using Agoda.IoC.Generator.Abstractions;
+namespace Agoda.IoC.Generator.UnitTests;
 [RegisterScoped(Concrete = true)]
+public class ClassA{
+}
+", @"serviceCollection.AddScoped<ClassA>();
+return serviceCollection;");
+
+        yield return new TestCaseData(@"
+using using Agoda.IoC.Generator.Abstractions;
+namespace Agoda.IoC.Generator.UnitTests;
+[RegisterPerRequest(Concrete = true)]
 public class ClassA{
 }
 ", @"serviceCollection.AddScoped<ClassA>();
@@ -39,6 +57,23 @@ namespace Agoda.IoC.Generator.UnitTests;
     }
 ", @"serviceCollection.AddScoped<IPartialClassTest2, PartialClassTest2>();
 return serviceCollection;");
+
+        yield return new TestCaseData(@"
+using using Agoda.IoC.Generator.Abstractions;
+namespace Agoda.IoC.Generator.UnitTests;
+    [RegisterPerRequest(For = typeof(IPartialClassTest2))]
+    public class PartialClassTest2 : IPartialClassTest2
+    {
+    }
+
+    public interface IPartialClassTest2
+    {
+    }
+", @"serviceCollection.AddScoped<IPartialClassTest2, PartialClassTest2>();
+return serviceCollection;");
+
+
+
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;

@@ -7,12 +7,14 @@ namespace Agoda.IoC.Generator;
 internal class RegistrationDescriptor
 {
     private readonly INamedTypeSymbol _registrationSymbol;
-    private readonly IList<INamedTypeSymbol> _attributeSymbols;
-    internal RegistrationDescriptor(
-        INamedTypeSymbol registrationSymbol,
-        IList<INamedTypeSymbol> attributeSymbols) => (_registrationSymbol, _attributeSymbols) = (registrationSymbol, attributeSymbols);
+
+    internal RegistrationDescriptor(INamedTypeSymbol registrationSymbol)
+    {
+        _registrationSymbol = registrationSymbol;
+    }
 
     internal List<RegistrationContext> RegistrationContexts { get; private set; } = new List<RegistrationContext>();
+
     internal HashSet<string> NameSpaces { get; private set; } = new HashSet<string>();
 
     internal void Build()
@@ -30,7 +32,6 @@ internal class RegistrationDescriptor
                 { RegistrationType: RegistrationType.Singleton } singleton => BuildSingletonRegistrationCode(singleton),
                 { RegistrationType: RegistrationType.Scoped } scopeRegister => BuildScopedRegistrationCode(scopeRegister),
                 { RegistrationType: RegistrationType.Transient } transient => BuildTransientRegistrationCode(transient),
-                // Todo: Add support for hosted service
                 _ => string.Empty
             };
 
@@ -50,29 +51,29 @@ internal class RegistrationDescriptor
                 replaceCase switch
                 {
                     { IsConcrete: true } replace
-                        => string.Format(Constance.GENERATE_REPLACE_SINGLETON_SOURCE, replace.ConcreteType),
+                        => string.Format(Constants.GENERATE_REPLACE_SINGLETON_SOURCE, replace.ConcreteType),
                     { IsConcrete: false } replace
-                        => string.Format(Constance.GENERATE_REPLACE_SINGLETON_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
+                        => string.Format(Constants.GENERATE_REPLACE_SINGLETON_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
                 },
             { IsReplaceService: false } normalCase =>
                 normalCase switch
                 {
                     { IsUseFactory: true, ImplementationFactoryCode: { Length: > 0 } } factory
-                        => string.Format(Constance.GENERATE_SINGLETON_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
+                        => string.Format(Constants.GENERATE_SINGLETON_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
 
                     { IsConcrete: true, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constance.GENERATE_SINGLETON_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
+                        => string.Format(Constants.GENERATE_SINGLETON_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
 
                     { IsConcrete: true, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constance.GENERATE_SINGLETON_SOURCE, register.ConcreteType),
+                        => string.Format(Constants.GENERATE_SINGLETON_SOURCE, register.ConcreteType),
 
                     { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constance.GENERATE_SINGLETON_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
+                        => string.Format(Constants.GENERATE_SINGLETON_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
 
                     { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constance.GENERATE_SINGLETON_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
+                        => string.Format(Constants.GENERATE_SINGLETON_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
                 },
-            _ => string.Format(Constance.GENERATE_SINGLETON_SOURCE, singleton.ConcreteType)
+            _ => string.Format(Constants.GENERATE_SINGLETON_SOURCE, singleton.ConcreteType)
         };
 
     internal string BuildScopedRegistrationCode(RegistrationContext scoped)
@@ -83,30 +84,30 @@ internal class RegistrationDescriptor
                   replaceCase switch
                   {
                       { IsConcrete: true } replace
-                        => string.Format(Constance.GENERATE_REPLACE_SCOPED_SOURCE, replace.ConcreteType),
+                        => string.Format(Constants.GENERATE_REPLACE_SCOPED_SOURCE, replace.ConcreteType),
                       { IsConcrete: false } replace
-                        => string.Format(Constance.GENERATE_REPLACE_SCOPED_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
+                        => string.Format(Constants.GENERATE_REPLACE_SCOPED_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
                   },
 
             { IsReplaceService: false } normalCase =>
                   normalCase switch
                   {
                       { IsUseFactory: true, ImplementationFactoryCode: { Length: > 0 } } factory
-                        => string.Format(Constance.GENERATE_SCOPED_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
+                        => string.Format(Constants.GENERATE_SCOPED_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
 
                       { IsConcrete: true, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constance.GENERATE_SCOPED_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
+                        => string.Format(Constants.GENERATE_SCOPED_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
 
                       { IsConcrete: true, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constance.GENERATE_SCOPED_SOURCE, register.ConcreteType),
+                        => string.Format(Constants.GENERATE_SCOPED_SOURCE, register.ConcreteType),
 
                       { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constance.GENERATE_SCOPED_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
+                        => string.Format(Constants.GENERATE_SCOPED_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
 
                       { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constance.GENERATE_SCOPED_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
+                        => string.Format(Constants.GENERATE_SCOPED_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
                   },
-            _ => string.Format(Constance.GENERATE_SCOPED_SOURCE, scoped.ConcreteType)
+            _ => string.Format(Constants.GENERATE_SCOPED_SOURCE, scoped.ConcreteType)
         };
 
     internal string BuildTransientRegistrationCode(RegistrationContext transient)
@@ -116,31 +117,31 @@ internal class RegistrationDescriptor
                 replaceCase switch
                 {
                     { IsReplaceService: true, IsConcrete: true } replace
-                        => string.Format(Constance.GENERATE_REPLACE_TRANSIENT_SOURCE, replace.ConcreteType),
+                        => string.Format(Constants.GENERATE_REPLACE_TRANSIENT_SOURCE, replace.ConcreteType),
 
                     { IsReplaceService: true, IsConcrete: false } replace
-                        => string.Format(Constance.GENERATE_REPLACE_TRANSIENT_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
+                        => string.Format(Constants.GENERATE_REPLACE_TRANSIENT_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
                 },
 
            { IsReplaceService: false } normalCase =>
                 normalCase switch
-                  {
-                      { IsUseFactory: true, ImplementationFactoryCode: { Length: > 0 } } factory
-                        => string.Format(Constance.GENERATE_TRANSIENT_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
-                      
-                      { IsConcrete: true, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constance.GENERATE_TRANSIENT_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
+                {
+                    { IsUseFactory: true, ImplementationFactoryCode: { Length: > 0 } } factory
+                      => string.Format(Constants.GENERATE_TRANSIENT_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
 
-                      { IsConcrete: true, ConcreteType: { Length: > 0 } } register 
-                        => string.Format(Constance.GENERATE_TRANSIENT_SOURCE, register.ConcreteType),
+                    { IsConcrete: true, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
+                      => string.Format(Constants.GENERATE_TRANSIENT_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
 
-                      { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric 
-                        => string.Format(Constance.GENERATE_TRANSIENT_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
+                    { IsConcrete: true, ConcreteType: { Length: > 0 } } register
+                      => string.Format(Constants.GENERATE_TRANSIENT_SOURCE, register.ConcreteType),
 
-                      { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constance.GENERATE_TRANSIENT_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
-                  },
-           _ => string.Format(Constance.GENERATE_TRANSIENT_SOURCE, transient.ConcreteType)
+                    { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
+                      => string.Format(Constants.GENERATE_TRANSIENT_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
+
+                    { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 } } register
+                      => string.Format(Constants.GENERATE_TRANSIENT_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
+                },
+           _ => string.Format(Constants.GENERATE_TRANSIENT_SOURCE, transient.ConcreteType)
        };
 
     internal void ParseRegistrationAttributes()
@@ -176,7 +177,7 @@ internal class RegistrationDescriptor
                             break;
                         case nameof(ContainerRegistration.ReplaceService):
                             registrationContext.IsReplaceService = namedArguments.Value.Value is bool isReplaceServices && isReplaceServices;
-                            if(registrationAttribute.NamedArguments is {  Length : 1})
+                            if (registrationAttribute.NamedArguments is { Length: 1 })
                             {
                                 registrationContext.IsConcrete = true;
                                 registrationContext.ConcreteType = _registrationSymbol.Name;
@@ -199,7 +200,7 @@ internal class RegistrationDescriptor
                         case nameof(ContainerRegistration.Factory):
                             if (namedArguments.Value.Value is not INamedTypeSymbol factoryAttribute) break;
 
-                            if (factoryAttribute.Interfaces.Any(i => i.ConstructedFrom.ToDisplayString().Equals(Constance.IMPLEMENTATION_FACTORY_INTERFACE, StringComparison.Ordinal)))
+                            if (factoryAttribute.Interfaces.Any(i => i.ConstructedFrom.ToDisplayString().Equals(Constants.IMPLEMENTATION_FACTORY_INTERFACE, StringComparison.Ordinal)))
                             {
                                 var className = factoryAttribute.MetadataName;
                                 registrationContext.IsUseFactory = true;
@@ -266,7 +267,7 @@ internal class RegistrationDescriptor
         }
 
         var attributeFullName = attributeClass.ToDisplayString();
-        if (!Constance.RegistrationTypes.TryGetValue(attributeFullName, out registrationType))
+        if (!Constants.RegistrationTypes.TryGetValue(attributeFullName, out registrationType))
         {
             return false;
         }

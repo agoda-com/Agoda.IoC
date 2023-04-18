@@ -18,7 +18,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
 
         var mapperClassDeclarations = context.SyntaxProvider
              .CreateSyntaxProvider(
-                static (s, ctx) => SyntacticPredicate(s, ctx),
+                static (s, ctx) => IsSyntaxTargetForGeneration(s, ctx),
                 static (context, ctx) => GetSemanticTargetForGeneration(context, ctx))
             .Where(static (r) => r != null);
 
@@ -27,7 +27,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
 
     }
 
-    private static bool SyntacticPredicate(SyntaxNode node, CancellationToken cancellationToken)
+    private static bool IsSyntaxTargetForGeneration(SyntaxNode node, CancellationToken cancellationToken)
     {
         return node is ClassDeclarationSyntax
         {
@@ -49,7 +49,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
 
                 var attributeContainingTypeSymbol = attributeSymbol.ContainingType;
                 var fullName = attributeContainingTypeSymbol.ToDisplayString();
-                if (Constance.RegistrationTypes.ContainsKey(fullName))
+                if (Constants.RegistrationTypes.ContainsKey(fullName))
                     return classDeclaration;
             }
         }
@@ -64,9 +64,10 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
 
         var registrationNamedTypeSymbols = new List<INamedTypeSymbol>()
         {
-            compilation.GetTypeByMetadataName(Constance.TRANSIENT_ATTRIBUTE_NAME),
-            compilation.GetTypeByMetadataName(Constance.SCOPED_ATTRIBUTE_NAME),
-            compilation.GetTypeByMetadataName(Constance.SINGLETON_ATTRIBUTE_NAME)
+            compilation.GetTypeByMetadataName(Constants.TRANSIENT_ATTRIBUTE_NAME),
+            compilation.GetTypeByMetadataName(Constants.PER_REQUEST_ATTRIBUTE_NAME),
+            compilation.GetTypeByMetadataName(Constants.SCOPED_ATTRIBUTE_NAME),
+            compilation.GetTypeByMetadataName(Constants.SINGLETON_ATTRIBUTE_NAME)
         };
 
         if (registrationNamedTypeSymbols.Any(x => x is null)) return;
@@ -78,7 +79,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
             if (registrationClassModel.GetDeclaredSymbol(registrationClassSyntax) is not INamedTypeSymbol registrationClassSymbol) continue;
             if (!registrationClassSymbol.HasRegisterAttribute(registrationNamedTypeSymbols)) continue;
 
-            registrationDescriptors.Add(new RegistrationDescriptor(registrationClassSymbol, registrationNamedTypeSymbols));
+            registrationDescriptors.Add(new RegistrationDescriptor(registrationClassSymbol));
         }
 
         if (!registrationDescriptors.Any()) { return; }
@@ -96,7 +97,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
 
         foreach (var ns in namespaces) nsbuilder.AppendLine($"using {ns};");
 
-        var generatedCode = Constance.GENERATE_CLASS_SOURCE
+        var generatedCode = Constants.GENERATE_CLASS_SOURCE
             .Replace("{0}", nsbuilder.ToString())
             .Replace("{1}", assemblyNameForMethod)
             .Replace("{2}", registrationCodes.ToString());

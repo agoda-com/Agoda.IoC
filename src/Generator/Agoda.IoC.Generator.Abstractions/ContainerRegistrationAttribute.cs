@@ -36,6 +36,13 @@ public sealed class RegisterSingletonAttribute : ContainerRegistration { }
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 public sealed class RegisterScopedAttribute : ContainerRegistration { }
 
+/// <inheritdoc />
+/// <summary>
+/// A single instance will be built for each HTTP request when first resolved, and reused for the
+/// lifetime of that request.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+public sealed class RegisterPerRequestAttribute : ContainerRegistration { }
 
 /// <inheritdoc />
 /// <summary>
