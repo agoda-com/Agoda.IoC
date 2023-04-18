@@ -215,7 +215,7 @@ internal class RegistrationDescriptor
                 RegistrationContexts.Add(registrationContext);
 
             }
-            // If Registration attribute do not configured For type attribute we will use the fi 
+            // If Registration attribute do not configured For type attribute we will use the first interface
             else if (_registrationSymbol.Interfaces.Any())
             {
                 var registrationContext = new RegistrationContext { RegistrationType = registrationType };
