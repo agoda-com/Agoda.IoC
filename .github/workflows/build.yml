@@ -54,8 +54,9 @@ jobs:
         name: nupkg
         path: ${{ env.GIT_REPO_ROOT }}/finalpackage
 
-    - uses: codecov/codecov-action@v1
+    - uses: codecov/codecov-action@v3
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         files: src/Agoda.IoC.Unity.UnitTests/results.cobertura.xml,src/Agoda.IoC.Unity.NetCore/results.cobertura.xml,src/Agoda.IoC.Unity.AutofacExt/results.cobertura.xml  # optional
         fail_ci_if_error: true # optional (default = false)
 
