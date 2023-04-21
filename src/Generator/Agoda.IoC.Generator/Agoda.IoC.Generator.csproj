@@ -12,7 +12,12 @@
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<PackageProjectUrl>https://github.com/agoda-com/Agoda.IoC</PackageProjectUrl>
+		<Title>Agoda IoC</Title>
+		<Authors>Keattisak Chinburarat</Authors>
+		<RepositoryUrl>https://github.com/agoda-com/Agoda.IoC</RepositoryUrl>
 		<PackageId>Agoda.Ioc.Generator</PackageId>
+		<Description>Share dotnet C# IoC source generator, used at Agoda.</Description>
+
 	</PropertyGroup>
 
 	<ItemGroup>
