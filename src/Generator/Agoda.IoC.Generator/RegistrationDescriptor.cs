@@ -8,143 +8,15 @@ internal class RegistrationDescriptor
 {
     private readonly INamedTypeSymbol _registrationSymbol;
 
-    internal RegistrationDescriptor(INamedTypeSymbol registrationSymbol)
-    {
-        _registrationSymbol = registrationSymbol;
-    }
+    internal RegistrationDescriptor(INamedTypeSymbol registrationSymbol) => _registrationSymbol = registrationSymbol;
 
     internal List<RegistrationContext> RegistrationContexts { get; private set; } = new List<RegistrationContext>();
 
     internal HashSet<string> NameSpaces { get; private set; } = new HashSet<string>();
 
-    internal void Build()
-    {
-        ParseRegistrationAttributes();
-    }
+    internal void Build() => ParseRegistrationAttributes();
 
-    internal string RegistrationCode()
-    {
-        var codes = new StringBuilder();
-        foreach (var reg in RegistrationContexts)
-        {
-            var code = reg switch
-            {
-                { RegistrationType: RegistrationType.Singleton } singleton => BuildSingletonRegistrationCode(singleton),
-                { RegistrationType: RegistrationType.Scoped } scopeRegister => BuildScopedRegistrationCode(scopeRegister),
-                { RegistrationType: RegistrationType.Transient } transient => BuildTransientRegistrationCode(transient),
-                _ => string.Empty
-            };
-
-            if (code is { Length: > 0 })
-            {
-                codes.AppendLine($"\t\t\t{code}");
-            }
-        }
-
-        return codes.ToString();
-    }
-
-    internal string BuildSingletonRegistrationCode(RegistrationContext singleton)
-        => singleton switch
-        {
-            { IsReplaceService: true } replaceCase =>
-                replaceCase switch
-                {
-                    { IsConcrete: true } replace
-                        => string.Format(Constants.GENERATE_REPLACE_SINGLETON_SOURCE, replace.ConcreteType),
-                    { IsConcrete: false } replace
-                        => string.Format(Constants.GENERATE_REPLACE_SINGLETON_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
-                },
-            { IsReplaceService: false } normalCase =>
-                normalCase switch
-                {
-                    { IsUseFactory: true, ImplementationFactoryCode: { Length: > 0 } } factory
-                        => string.Format(Constants.GENERATE_SINGLETON_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
-
-                    { IsConcrete: true, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constants.GENERATE_SINGLETON_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
-
-                    { IsConcrete: true, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constants.GENERATE_SINGLETON_SOURCE, register.ConcreteType),
-
-                    { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constants.GENERATE_SINGLETON_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
-
-                    { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constants.GENERATE_SINGLETON_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
-                },
-            _ => string.Format(Constants.GENERATE_SINGLETON_SOURCE, singleton.ConcreteType)
-        };
-
-    internal string BuildScopedRegistrationCode(RegistrationContext scoped)
-        => scoped switch
-        {
-
-            { IsReplaceService: true } replaceCase =>
-                  replaceCase switch
-                  {
-                      { IsConcrete: true } replace
-                        => string.Format(Constants.GENERATE_REPLACE_SCOPED_SOURCE, replace.ConcreteType),
-                      { IsConcrete: false } replace
-                        => string.Format(Constants.GENERATE_REPLACE_SCOPED_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
-                  },
-
-            { IsReplaceService: false } normalCase =>
-                  normalCase switch
-                  {
-                      { IsUseFactory: true, ImplementationFactoryCode: { Length: > 0 } } factory
-                        => string.Format(Constants.GENERATE_SCOPED_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
-
-                      { IsConcrete: true, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constants.GENERATE_SCOPED_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
-
-                      { IsConcrete: true, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constants.GENERATE_SCOPED_SOURCE, register.ConcreteType),
-
-                      { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                        => string.Format(Constants.GENERATE_SCOPED_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
-
-                      { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 } } register
-                        => string.Format(Constants.GENERATE_SCOPED_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
-                  },
-            _ => string.Format(Constants.GENERATE_SCOPED_SOURCE, scoped.ConcreteType)
-        };
-
-    internal string BuildTransientRegistrationCode(RegistrationContext transient)
-       => transient switch
-       {
-           { IsReplaceService: true } replaceCase =>
-                replaceCase switch
-                {
-                    { IsReplaceService: true, IsConcrete: true } replace
-                        => string.Format(Constants.GENERATE_REPLACE_TRANSIENT_SOURCE, replace.ConcreteType),
-
-                    { IsReplaceService: true, IsConcrete: false } replace
-                        => string.Format(Constants.GENERATE_REPLACE_TRANSIENT_INTERFACE_SOURCE, replace.ForType, replace.ConcreteType),
-                },
-
-           { IsReplaceService: false } normalCase =>
-                normalCase switch
-                {
-                    { IsUseFactory: true, ImplementationFactoryCode: { Length: > 0 } } factory
-                      => string.Format(Constants.GENERATE_TRANSIENT_IMPLEMENTATION_FACTORY, factory.ImplementationFactoryCode),
-
-                    { IsConcrete: true, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                      => string.Format(Constants.GENERATE_TRANSIENT_OPEN_GENERIC_SOURCE, openGeneric.ConcreteType),
-
-                    { IsConcrete: true, ConcreteType: { Length: > 0 } } register
-                      => string.Format(Constants.GENERATE_TRANSIENT_SOURCE, register.ConcreteType),
-
-                    { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 }, IsOpenGeneric: true } openGeneric
-                      => string.Format(Constants.GENERATE_TRANSIENT_INTERFACE_OPEN_GENERIC_SOURCE, openGeneric.ForType, openGeneric.ConcreteType),
-
-                    { IsConcrete: false, ForType: { Length: > 0 }, ConcreteType: { Length: > 0 } } register
-                      => string.Format(Constants.GENERATE_TRANSIENT_INTERFACE_SOURCE, register.ForType, register.ConcreteType),
-                },
-           _ => string.Format(Constants.GENERATE_TRANSIENT_SOURCE, transient.ConcreteType)
-       };
-
-    internal void ParseRegistrationAttributes()
+    private void ParseRegistrationAttributes()
     {
         foreach (var registrationAttribute in _registrationSymbol.GetAttributes())
         {
@@ -208,6 +80,19 @@ internal class RegistrationDescriptor
                                 NameSpaces.Add(factoryAttribute.ContainingNamespace.ToDisplayString());
                             }
                             break;
+                        case nameof(ContainerRegistration.OfCollection):
+                            if (namedArguments.Value.Value is bool isCollection)
+                            {
+                                registrationContext.IsCollection = isCollection;
+                            }
+                            break;
+
+                        case nameof(ContainerRegistration.Order):
+                            if (namedArguments.Value.Value is int order)
+                            {
+                                registrationContext.Order = order;
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -258,7 +143,7 @@ internal class RegistrationDescriptor
         }
     }
 
-    private bool TryGetRegistrationType(AttributeData registrationAttribute, out RegistrationType registrationType)
+    private static bool TryGetRegistrationType(AttributeData registrationAttribute, out RegistrationType registrationType)
     {
         registrationType = RegistrationType.Singleton;
         if (registrationAttribute.AttributeClass is not { } attributeClass)
@@ -273,6 +158,7 @@ internal class RegistrationDescriptor
         }
         return true;
     }
+
 }
 
 

@@ -1,4 +1,5 @@
-﻿using Agoda.IoC.Generator.Helpers;
+﻿using Agoda.IoC.Generator.Emit;
+using Agoda.IoC.Generator.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -88,19 +89,46 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
         var registrationCodes = new StringBuilder();
         var nsbuilder = new StringBuilder();
 
+        var normalRegistrationContexts = new List<RegistrationContext>();
+        var OfcollectionRegistrationContexts = new List<RegistrationContext>();
+
+
         foreach (var registrationDescriptor in registrationDescriptors)
         {
             registrationDescriptor.Build();
+
+            registrationDescriptor.RegistrationContexts.ForEach(rg =>
+            {
+                if (rg.IsCollection) { OfcollectionRegistrationContexts.Add(rg); }
+                else { normalRegistrationContexts.Add(rg); }
+            });
             foreach (var ns in registrationDescriptor.NameSpaces) { namespaces.Add(ns); }
-            registrationCodes.Append(registrationDescriptor.RegistrationCode());
         }
+
+        // order ofcollection
+        if (OfcollectionRegistrationContexts.Any())
+        {
+            OfcollectionRegistrationContexts = OfcollectionRegistrationContexts
+                .OrderBy(rg => rg.ConcreteType)
+                .ThenBy(rg => rg.ForType)
+                .ThenBy(rg => rg.Order)
+                .ToList();
+        }
+
+        var normalRegistrationCode = SourceEmitter.Build(normalRegistrationContexts);
+        var OfcollectionRegistrationCode = SourceEmitter.Build(OfcollectionRegistrationContexts);
+
+        var finalCode = @$"
+{normalRegistrationCode}
+{OfcollectionRegistrationCode}
+";
 
         foreach (var ns in namespaces) nsbuilder.AppendLine($"using {ns};");
 
         var generatedCode = Constants.GENERATE_CLASS_SOURCE
             .Replace("{0}", nsbuilder.ToString())
             .Replace("{1}", assemblyNameForMethod)
-            .Replace("{2}", registrationCodes.ToString());
+            .Replace("{2}", finalCode);
 
         ctx.AddSource("Agoda.IoC.ServiceCollectionExtension.g.cs", SourceText.From(generatedCode, Encoding.UTF8));
     }

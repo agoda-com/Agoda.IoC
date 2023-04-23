@@ -71,6 +71,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.IoC.Generator.UnitTests", "Generator\UnitTests\Agoda.IoC.Generator.UnitTests\Agoda.IoC.Generator.UnitTests.csproj", "{6EA95568-6CDA-40B5-A207-19043852DE9E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{446BC7ED-88E1-4264-99FC-9FF7398F1618}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorExample", "Generator\Example\GeneratorExample\GeneratorExample.csproj", "{FC9C1FBB-B13E-41AD-889F-A883EBB5226F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,6 +205,10 @@ Global
 		{6EA95568-6CDA-40B5-A207-19043852DE9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EA95568-6CDA-40B5-A207-19043852DE9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EA95568-6CDA-40B5-A207-19043852DE9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC9C1FBB-B13E-41AD-889F-A883EBB5226F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC9C1FBB-B13E-41AD-889F-A883EBB5226F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC9C1FBB-B13E-41AD-889F-A883EBB5226F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC9C1FBB-B13E-41AD-889F-A883EBB5226F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -231,6 +239,8 @@ Global
 		{512A5192-2378-4322-BA79-54B3607B381C} = {D11AA066-46E1-462A-97D3-2989347B352B}
 		{C911102C-F2E9-45E1-B50B-C8784994C2F4} = {D11AA066-46E1-462A-97D3-2989347B352B}
 		{6EA95568-6CDA-40B5-A207-19043852DE9E} = {C911102C-F2E9-45E1-B50B-C8784994C2F4}
+		{446BC7ED-88E1-4264-99FC-9FF7398F1618} = {D11AA066-46E1-462A-97D3-2989347B352B}
+		{FC9C1FBB-B13E-41AD-889F-A883EBB5226F} = {446BC7ED-88E1-4264-99FC-9FF7398F1618}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96108C8B-1CFE-440B-9A38-213FAFE10220}
