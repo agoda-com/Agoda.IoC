@@ -83,14 +83,10 @@ public class AgodaIoCGeneratorResultAssertions
 
     public AgodaIoCGeneratorResultAssertions HaveMethodBody(string methodName, string registrationBody)
     {
-
-        var body = _agodaIoC.Methods[methodName].Body;
-
         _agodaIoC.Methods[methodName]
             .Body
             .Should()
             .Be(registrationBody.ReplaceLineEndings().Trim(), $"Method: {methodName}");
         return this;
     }
-
 }
