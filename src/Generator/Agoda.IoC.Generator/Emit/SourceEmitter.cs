@@ -9,7 +9,6 @@ internal static class SourceEmitter
         if( registrationContexts is { Count: 0 }) return string.Empty;
 
         var codes = new StringBuilder();
-        codes.AppendLine($"\t\t\t// Of Collection code");
         foreach (var reg in registrationContexts)
         {
             var code = reg switch

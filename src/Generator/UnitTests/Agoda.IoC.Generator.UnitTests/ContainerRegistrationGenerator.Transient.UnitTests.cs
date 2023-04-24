@@ -100,26 +100,67 @@ public class ClassBImplementationFactory : IImplementationFactory<ClassB>
 }
 ", @"serviceCollection.AddTransient(sp => new ClassBImplementationFactory().Factory(sp));
 return serviceCollection;");
+
+        // OfCollection case
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
-    public interface IThing<T,U>
+[RegisterTransient(For = typeof(IPipeline), OfCollection = true, Order = 2)]
+public class Pipeline2 : IPipeline
+{
+    public string Invoke()
     {
-        string GetNameT { get; }
-        string GetNameU { get; }
+        return nameof(Pipeline2);
     }
-    [RegisterTransient(For = typeof(IThing<,>))]
-    public class GenericThing<T,U> : IThing<T,U>
+}
+[RegisterTransient(For = typeof(IPipeline), OfCollection = true, Order = 3)]
+public class Pipeline3 : IPipeline
+{
+    public string Invoke()
     {
-        public GenericThing()
-        {
-            GetNameT = typeof(T).Name;
-            GetNameU = typeof(U).Name;
-        }
-        public string GetNameT { get; }
-        public string GetNameU { get; }
+        return nameof(Pipeline2);
     }
-", @"serviceCollection.AddTransient(typeof(IThing<, >), typeof(GenericThing<, >));
+}
+[RegisterTransient(For = typeof(IPipeline), OfCollection = true, Order = 1)]
+public class Pipeline1 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline1);
+    }
+}
+public interface IPipeline
+{
+    string Invoke();
+}
+[RegisterTransient(For = typeof(IMiddleware), OfCollection = true, Order = 3)]
+public class IMiddleware2 : IMiddleware
+{
+    public string Invoke()
+    {
+        return nameof(IMiddleware1);
+    }
+}
+[RegisterTransient(For = typeof(IMiddleware), OfCollection = true, Order = 1)]
+public class IMiddleware1 : IMiddleware
+{
+    public string Invoke()
+    {
+        return nameof(IMiddleware1);
+    }
+}
+public interface IMiddleware
+{
+    string Invoke();
+}
+
+",
+@"// Of Collection code
+serviceCollection.AddTransient<IMiddleware, IMiddleware1>();
+serviceCollection.AddTransient<IMiddleware, IMiddleware2>();
+serviceCollection.AddTransient<IPipeline, Pipeline1>();
+serviceCollection.AddTransient<IPipeline, Pipeline2>();
+serviceCollection.AddTransient<IPipeline, Pipeline3>();
 return serviceCollection;");
     }
 

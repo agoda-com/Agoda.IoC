@@ -36,7 +36,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
         } candidateClass && !candidateClass.Modifiers.Any(SyntaxKind.StaticKeyword); // should not contain static keyword
     }
 
-    private static ClassDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext ctx, CancellationToken cancellationToken)
+    private static ClassDeclarationSyntax GetSemanticTargetForGeneration(GeneratorSyntaxContext ctx, CancellationToken cancellationToken)
     {
         Debug.Assert(ctx.Node is ClassDeclarationSyntax);
         var classDeclaration = Unsafe.As<ClassDeclarationSyntax>(ctx.Node);
@@ -109,26 +109,24 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
         if (OfcollectionRegistrationContexts.Any())
         {
             OfcollectionRegistrationContexts = OfcollectionRegistrationContexts
-                .OrderBy(rg => rg.ConcreteType)
-                .ThenBy(rg => rg.ForType)
+                .OrderBy(rg => rg.ForType)
                 .ThenBy(rg => rg.Order)
                 .ToList();
         }
 
-        var normalRegistrationCode = SourceEmitter.Build(normalRegistrationContexts);
-        var OfcollectionRegistrationCode = SourceEmitter.Build(OfcollectionRegistrationContexts);
-
-        var finalCode = @$"
-{normalRegistrationCode}
-{OfcollectionRegistrationCode}
-";
+        registrationCodes.AppendLine(SourceEmitter.Build(normalRegistrationContexts));
+        if (OfcollectionRegistrationContexts.Any())
+        {
+            registrationCodes.AppendLine($"\t\t\t// Of Collection code");
+            registrationCodes.AppendLine(SourceEmitter.Build(OfcollectionRegistrationContexts));
+        }
 
         foreach (var ns in namespaces) nsbuilder.AppendLine($"using {ns};");
 
         var generatedCode = Constants.GENERATE_CLASS_SOURCE
             .Replace("{0}", nsbuilder.ToString())
             .Replace("{1}", assemblyNameForMethod)
-            .Replace("{2}", finalCode);
+            .Replace("{2}", registrationCodes.ToString());
 
         ctx.AddSource("Agoda.IoC.ServiceCollectionExtension.g.cs", SourceText.From(generatedCode, Encoding.UTF8));
     }

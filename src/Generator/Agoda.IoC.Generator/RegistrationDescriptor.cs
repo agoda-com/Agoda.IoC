@@ -1,6 +1,5 @@
 ﻿using Agoda.IoC.Generator.Abstractions;
 using Microsoft.CodeAnalysis;
-using System.Text;
 
 namespace Agoda.IoC.Generator;
 
