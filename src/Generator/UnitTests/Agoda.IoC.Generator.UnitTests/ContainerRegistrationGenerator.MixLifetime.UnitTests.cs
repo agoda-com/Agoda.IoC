@@ -85,4 +85,40 @@ return serviceCollection;");
                 .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
                 .HaveMethodBody("Register", generatedBodyMethod);
     }
+
+    [TestCase(
+        @"using using Agoda.IoC.Generator.Abstractions;
+namespace Agoda.IoC.Generator.UnitTests;
+
+[RegisterScoped]
+public class ClassA: IClassA{
+}
+public interface IClassA{
+}
+
+[RegisterSingleton]
+public class DoWork<T> where T : new()
+{
+    public T Process()
+    {
+        return new T();
+    }
+}
+",
+        @"serviceCollection.AddScoped<IClassA, ClassA>();
+serviceCollection.AddSingleton(typeof(DoWork<>));
+return serviceCollection;
+")]
+
+    public void Should_Generate_With_First_interface_Correctly(string source, string generatedBodyMethod)
+    {
+        TestHelper.GenerateAgodaIoC(source)
+                .Should()
+                .HaveMethodCount(2)
+                .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
+                .HaveMethodBody("Register", generatedBodyMethod);
+    }
+
+
+
 }

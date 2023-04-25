@@ -61,11 +61,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
     {
         var assemblyNameForMethod = compilation.AssemblyName.Replace(".", string.Empty).Replace(" ", string.Empty).Trim();
 
-        if (registerClasses.IsDefaultOrEmpty)
-        {
-            AddSourceInternal(ctx, string.Empty, assemblyNameForMethod, string.Empty);
-            return;
-        }
+        if (registerClasses.IsDefaultOrEmpty) { return; }
 
         var registrationNamedTypeSymbols = new List<INamedTypeSymbol>()
         {
@@ -75,11 +71,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
             compilation.GetTypeByMetadataName(Constants.SINGLETON_ATTRIBUTE_NAME)
         };
 
-        if (registrationNamedTypeSymbols.Any(x => x is null))
-        {
-            AddSourceInternal(ctx, string.Empty, assemblyNameForMethod, string.Empty);
-            return;
-        }
+        if (registrationNamedTypeSymbols.Any(x => x is null)) { return; }
 
         var registrationDescriptors = new List<RegistrationDescriptor>();
         foreach (var registrationClassSyntax in registerClasses.Distinct())
@@ -91,10 +83,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
             registrationDescriptors.Add(new RegistrationDescriptor(registrationClassSymbol));
         }
 
-        if (!registrationDescriptors.Any()) {
-            AddSourceInternal(ctx, string.Empty, assemblyNameForMethod, string.Empty);
-            return;
-        }
+        if (!registrationDescriptors.Any()) { return; }
 
         var namespaces = new HashSet<string>();
         var registrationCodes = new StringBuilder();

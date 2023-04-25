@@ -72,3 +72,15 @@ public interface IMiddleware
 {
     string Invoke();
 }
+
+
+
+
+[RegisterSingleton]
+public class DoWork<T> where T : new()
+{
+    public T Process()
+    {
+        return new T();
+    }
+}
