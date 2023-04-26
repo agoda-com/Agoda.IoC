@@ -17,14 +17,14 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
 
-        var mapperClassDeclarations = context.SyntaxProvider
+        var targetClassDeclarations = context.SyntaxProvider
              .CreateSyntaxProvider(
                 static (s, ctx) => IsSyntaxTargetForGeneration(s, ctx),
                 static (context, ctx) => GetSemanticTargetForGeneration(context, ctx))
             .Where(static (r) => r != null);
 
-        var compilationAndMappers = context.CompilationProvider.Combine(mapperClassDeclarations.Collect());
-        context.RegisterImplementationSourceOutput(compilationAndMappers, static (spc, source) => Execute(source.Left, source.Right, spc));
+        var compilationAndTargetClasses = context.CompilationProvider.Combine(targetClassDeclarations.Collect());
+        context.RegisterImplementationSourceOutput(compilationAndTargetClasses, static (spc, source) => Execute(source.Left, source.Right, spc));
 
     }
 
@@ -33,7 +33,7 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
         return node is ClassDeclarationSyntax
         {
             AttributeLists.Count: > 0,
-        } candidateClass && !candidateClass.Modifiers.Any(SyntaxKind.StaticKeyword); // should not contain static keyword
+        } targetClass && !targetClass.Modifiers.Any(SyntaxKind.StaticKeyword); // should not contain static keyword
     }
 
     private static ClassDeclarationSyntax GetSemanticTargetForGeneration(GeneratorSyntaxContext ctx, CancellationToken cancellationToken)
@@ -41,16 +41,16 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
         Debug.Assert(ctx.Node is ClassDeclarationSyntax);
         var classDeclaration = Unsafe.As<ClassDeclarationSyntax>(ctx.Node);
 
-        foreach (var attributeListSyntax in classDeclaration.AttributeLists)
+        foreach (var attributeList in classDeclaration.AttributeLists)
         {
-            foreach (var attributeSyntax in attributeListSyntax.Attributes)
+            foreach (var attribute in attributeList.Attributes)
             {
-                if (ctx.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
+                if (ctx.SemanticModel.GetSymbolInfo(attribute).Symbol is not IMethodSymbol attributeMethodSymbol)
                     continue;
 
-                var attributeContainingTypeSymbol = attributeSymbol.ContainingType;
-                var fullName = attributeContainingTypeSymbol.ToDisplayString();
-                if (Constants.RegistrationTypes.ContainsKey(fullName))
+                var attributeDeclaringTypeSymbol = attributeMethodSymbol.ContainingType;
+                var attributeTypeName = attributeDeclaringTypeSymbol.ToDisplayString();
+                if (Constants.AttributeRegistrationTypes.ContainsKey(attributeTypeName))
                     return classDeclaration;
             }
         }
@@ -63,87 +63,71 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
 
         if (registerClasses.IsDefaultOrEmpty) { return; }
 
-        var registrationNamedTypeSymbols = new List<INamedTypeSymbol>()
+        var registrationAttributeTypeSymbols = new List<INamedTypeSymbol>()
         {
-            compilation.GetTypeByMetadataName(Constants.TRANSIENT_ATTRIBUTE_NAME),
-            compilation.GetTypeByMetadataName(Constants.PER_REQUEST_ATTRIBUTE_NAME),
-            compilation.GetTypeByMetadataName(Constants.SCOPED_ATTRIBUTE_NAME),
-            compilation.GetTypeByMetadataName(Constants.SINGLETON_ATTRIBUTE_NAME)
+            compilation.GetTypeByMetadataName(Constants.RegisterTransientAttributeName),
+            compilation.GetTypeByMetadataName(Constants.RegisterPerRequestAttributeName),
+            compilation.GetTypeByMetadataName(Constants.RegisterScopedAttributeName),
+            compilation.GetTypeByMetadataName(Constants.RegisterSingletonAttributeName)
         };
 
-        if (registrationNamedTypeSymbols.Any(x => x is null)) { return; }
+        if (registrationAttributeTypeSymbols.Any(x => x is null)) { return; }
 
         var registrationDescriptors = new List<RegistrationDescriptor>();
-        foreach (var registrationClassSyntax in registerClasses.Distinct())
+        foreach (var targetClassDeclaration in registerClasses.Distinct())
         {
-            var registrationClassModel = compilation.GetSemanticModel(registrationClassSyntax.SyntaxTree);
-            if (registrationClassModel.GetDeclaredSymbol(registrationClassSyntax) is not INamedTypeSymbol registrationClassSymbol) continue;
-            if (!registrationClassSymbol.HasRegisterAttribute(registrationNamedTypeSymbols)) continue;
+            var registrationClassModel = compilation.GetSemanticModel(targetClassDeclaration.SyntaxTree);
+            if (registrationClassModel.GetDeclaredSymbol(targetClassDeclaration) is not INamedTypeSymbol registrationClassSymbol) continue;
+            if (!registrationClassSymbol.HasRegisterAttribute(registrationAttributeTypeSymbols)) continue;
 
             registrationDescriptors.Add(new RegistrationDescriptor(registrationClassSymbol));
         }
 
         if (!registrationDescriptors.Any()) { return; }
 
-        var namespaces = new HashSet<string>();
+        var usedNamespaces = new HashSet<string>();
         var registrationCodes = new StringBuilder();
-        var nsbuilder = new StringBuilder();
+        var namespaceStringBuilder = new StringBuilder();
 
-        var normalRegistrationContexts = new List<RegistrationContext>();
-        var OfcollectionRegistrationContexts = new List<RegistrationContext>();
+        var singleRegistrationContexts = new List<RegistrationContext>();
+        var collectionRegistrationContexts = new List<RegistrationContext>();
 
 
         foreach (var registrationDescriptor in registrationDescriptors)
         {
             registrationDescriptor.Build();
 
-            registrationDescriptor.RegistrationContexts.ForEach(rg =>
+            registrationDescriptor.RegistrationContexts.ForEach(registrationContext =>
             {
-                if (rg.IsCollection) { OfcollectionRegistrationContexts.Add(rg); }
-                else { normalRegistrationContexts.Add(rg); }
+                if (registrationContext.IsCollection) { collectionRegistrationContexts.Add(registrationContext); }
+                else { singleRegistrationContexts.Add(registrationContext); }
             });
-            foreach (var ns in registrationDescriptor.NameSpaces) { namespaces.Add(ns); }
+            foreach (var ns in registrationDescriptor.NameSpaces) { usedNamespaces.Add(ns); }
         }
 
         // order ofcollection
-        if (OfcollectionRegistrationContexts.Any())
+        if (collectionRegistrationContexts.Any())
         {
-            OfcollectionRegistrationContexts = OfcollectionRegistrationContexts
-                .OrderBy(rg => rg.ForType)
-                .ThenBy(rg => rg.Order)
+            collectionRegistrationContexts = collectionRegistrationContexts
+                .OrderBy(registrationContext => registrationContext.ForType)
+                .ThenBy(registrationContext => registrationContext.Order)
                 .ToList();
         }
 
-        registrationCodes.Append(SourceEmitter.Build(normalRegistrationContexts));
-        if (OfcollectionRegistrationContexts.Any())
+        registrationCodes.Append(SourceEmitter.Build(singleRegistrationContexts));
+        if (collectionRegistrationContexts.Any())
         {
             registrationCodes.AppendLine($"\t\t\t// Of Collection code");
-            registrationCodes.Append(SourceEmitter.Build(OfcollectionRegistrationContexts));
+            registrationCodes.Append(SourceEmitter.Build(collectionRegistrationContexts));
         }
 
-        foreach (var ns in namespaces) nsbuilder.AppendLine($"using {ns};");
+        foreach (var ns in usedNamespaces) namespaceStringBuilder.AppendLine($"using {ns};");
 
         var generatedCode = Constants.GENERATE_CLASS_SOURCE
-            .Replace("{0}", nsbuilder.ToString())
+            .Replace("{0}", namespaceStringBuilder.ToString())
             .Replace("{1}", assemblyNameForMethod)
             .Replace("{2}", registrationCodes.ToString());
 
-        AddSourceInternal(ctx, nsbuilder.ToString(), assemblyNameForMethod, registrationCodes.ToString());
+        ctx.AddSource("Agoda.IoC.ServiceCollectionExtension.g.cs", SourceText.From(generatedCode, Encoding.UTF8));       
     }
-
-    private static void AddSourceInternal(SourceProductionContext ctx,
-        string usingNamespace,
-        string extensionMethodNamespace,
-        string registrationCodes)
-    {
-        var generatedCode = Constants.GENERATE_CLASS_SOURCE
-           .Replace("{0}", usingNamespace)
-           .Replace("{1}", extensionMethodNamespace)
-           .Replace("{2}", registrationCodes);
-
-        ctx.AddSource("Agoda.IoC.ServiceCollectionExtension.g.cs", SourceText.From(generatedCode, Encoding.UTF8));
-
-    }
-
-
 }

@@ -151,7 +151,7 @@ internal class RegistrationDescriptor
         }
 
         var attributeFullName = attributeClass.ToDisplayString();
-        if (!Constants.RegistrationTypes.TryGetValue(attributeFullName, out registrationType))
+        if (!Constants.AttributeRegistrationTypes.TryGetValue(attributeFullName, out registrationType))
         {
             return false;
         }
