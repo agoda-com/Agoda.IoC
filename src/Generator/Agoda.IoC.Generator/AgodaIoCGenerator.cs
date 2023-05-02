@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -121,13 +122,16 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
             registrationCodes.Append(SourceEmitter.Build(collectionRegistrationContexts));
         }
 
-        foreach (var ns in usedNamespaces) namespaceStringBuilder.AppendLine($"using {ns};");
+        foreach (var ns in usedNamespaces) 
+        { 
+            namespaceStringBuilder.AppendLine($"using {ns};"); 
+        }
 
         var generatedCode = Constants.GENERATE_CLASS_SOURCE
-            .Replace("{0}", namespaceStringBuilder.ToString())
-            .Replace("{1}", assemblyNameForMethod)
-            .Replace("{2}", registrationCodes.ToString());
+                    .Replace("{0}", namespaceStringBuilder.ToString())
+                    .Replace("{1}", assemblyNameForMethod)
+                    .Replace("{2}", registrationCodes.ToString());
 
-        ctx.AddSource("Agoda.IoC.ServiceCollectionExtension.g.cs", SourceText.From(generatedCode, Encoding.UTF8));       
+        ctx.AddSource("Agoda.IoC.ServiceCollectionExtension.g.cs", SourceText.From(generatedCode, Encoding.UTF8));
     }
 }

@@ -6,13 +6,13 @@ namespace GeneratorExample;
 public class ClassA : IClassA
 {
 }
-public interface IClassA { }
+public interface IClassA {  }
 
 
 [RegisterSingleton(Factory = typeof(ClassBImplementationFactory))]
 public class ClassC : IClassC
 {
-}
+} 
 public interface IClassC { }
 
 
@@ -60,7 +60,7 @@ public class IMiddleware2 : IMiddleware
         return nameof(IMiddleware1);
     }
 }
-[RegisterSingleton(For = typeof(IMiddleware), OfCollection = true, Order = 1)]
+[RegisterSingleton(For = typeof(IMiddleware), OfCollection = true, Order = 5)]
 public class IMiddleware1 : IMiddleware
 {
     public string Invoke()
