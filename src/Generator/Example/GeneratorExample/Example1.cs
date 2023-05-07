@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 namespace GeneratorExample;
 
 
-[RegisterHostedService]
+[RegisterHostedService] 
 public class TimedHostedService : IHostedService, IDisposable
 {
     private int executionCount = 0;
