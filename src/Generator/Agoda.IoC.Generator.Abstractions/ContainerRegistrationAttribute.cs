@@ -113,9 +113,14 @@ public sealed class RegisterPerRequestAttribute : ContainerRegistration { }
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 public sealed class RegisterTransientAttribute : ContainerRegistration { }
 
+
+
+/// <inheritdoc />
+/// <summary>
+/// Add an <see cref="IHostedService"/> registration for the given type.
+/// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 public sealed class RegisterHostedServiceAttribute : ContainerRegistration { }
-
 
 public interface IImplementationFactory<T>
 {

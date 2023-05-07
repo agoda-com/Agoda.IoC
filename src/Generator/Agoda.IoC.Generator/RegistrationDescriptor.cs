@@ -21,7 +21,20 @@ internal class RegistrationDescriptor
         {
             if (!TryGetRegistrationType(registrationAttribute, out var registrationType)) { continue; }
 
-            if (registrationAttribute.NamedArguments is { Length: > 0 })
+
+            if(registrationAttribute.AttributeClass is { } attributeClass && 
+                attributeClass.ToDisplayString().Equals(Constants.RegisterHostedServiceName))
+            {
+
+                var hostedServiceClassName = _registrationSymbol.Name;
+                var registrationContext = new RegistrationContext { 
+                    RegistrationType = RegistrationType.HostedService, 
+                    ConcreteType = hostedServiceClassName 
+                };
+                NameSpaces.Add(_registrationSymbol.ContainingNamespace.ToDisplayString());
+                RegistrationContexts.Add(registrationContext);
+            }
+            else if (registrationAttribute.NamedArguments is { Length: > 0 })
             {
                 var registrationContext = new RegistrationContext { RegistrationType = registrationType };
                 foreach (var namedArguments in registrationAttribute.NamedArguments)
