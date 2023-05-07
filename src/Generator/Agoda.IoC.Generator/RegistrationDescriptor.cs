@@ -31,6 +31,7 @@ internal class RegistrationDescriptor
                         case nameof(ContainerRegistration.Concrete):
                             if (namedArguments.Value.Value is bool isConcrete)
                             {
+                                NameSpaces.Add(_registrationSymbol.ContainingNamespace.ToDisplayString());
                                 registrationContext.IsConcrete = isConcrete;
 
                                 var concreteTypeName = _registrationSymbol.Name;
@@ -42,8 +43,15 @@ internal class RegistrationDescriptor
                                     registrationContext.IsOpenGeneric = true;
                                 }
 
-                                registrationContext.ConcreteType = concreteTypeName;
-                                NameSpaces.Add(_registrationSymbol.ContainingNamespace.ToDisplayString());
+                                if (isConcrete) { registrationContext.ConcreteType = concreteTypeName; }
+                                
+                                if (!isConcrete && _registrationSymbol.Interfaces.FirstOrDefault() is { } firstInterface)
+                                {
+                                    registrationContext.ConcreteType = concreteTypeName;
+                                    registrationContext.ForType = firstInterface.Name;
+                                }
+
+
                             }
                             break;
                         case nameof(ContainerRegistration.ReplaceService):

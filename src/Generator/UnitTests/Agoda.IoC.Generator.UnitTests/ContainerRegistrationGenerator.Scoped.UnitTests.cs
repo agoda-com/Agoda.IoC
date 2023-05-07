@@ -17,6 +17,19 @@ public class ClassA{
 ", @"serviceCollection.AddScoped<ClassA>();
 return serviceCollection;" );
 
+
+        yield return new TestCaseData(@"
+using using Agoda.IoC.Generator.Abstractions;
+namespace Agoda.IoC.Generator.UnitTests;
+[RegisterScoped(Concrete = true)]
+[RegisterScoped(Concrete = false)]
+public class ClassA : IClassA{
+}
+public interface IClassA {}
+", @"serviceCollection.AddScoped<ClassA>();
+serviceCollection.AddScoped<IClassA, ClassA>();
+return serviceCollection;");
+
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
@@ -195,9 +208,6 @@ serviceCollection.AddScoped<IPipeline, Pipeline1>();
 serviceCollection.AddScoped<IPipeline, Pipeline2>();
 serviceCollection.AddScoped<IPipeline, Pipeline3>();
 return serviceCollection;");
-
-
-
     }
     [Test, TestCaseSource("ContainerRegistrationGeneratorTestDatas")]
     public void Should_Generate_AddScoped_Correctly(string source, string generatedBodyMethod)

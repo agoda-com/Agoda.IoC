@@ -6,13 +6,18 @@ namespace GeneratorExample;
 public class ClassA : IClassA
 {
 }
-public interface IClassA {  }
+
+[RegisterScoped(Concrete = false)]
+public class ClassB : IClassA
+{
+}
+public interface IClassA { }
 
 
 [RegisterSingleton(Factory = typeof(ClassBImplementationFactory))]
 public class ClassC : IClassC
 {
-} 
+}
 public interface IClassC { }
 
 
