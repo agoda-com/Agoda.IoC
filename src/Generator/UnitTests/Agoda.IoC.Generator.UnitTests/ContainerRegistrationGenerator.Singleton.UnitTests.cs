@@ -13,16 +13,20 @@ namespace Agoda.IoC.Generator.UnitTests;
 [RegisterSingleton]
 public class ClassA{
 }
-", @"serviceCollection.AddSingleton<ClassA>();
+"
+, @"serviceCollection.AddSingleton<ClassA>();
 return serviceCollection;");
+
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
 [RegisterSingleton(Concrete = true)]
 public class ClassA{
 }
-", @"serviceCollection.AddSingleton<ClassA>();
+"
+, @"serviceCollection.AddSingleton<ClassA>();
 return serviceCollection;");
+
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
@@ -34,8 +38,10 @@ namespace Agoda.IoC.Generator.UnitTests;
     public interface IPartialClassTest2
     {
     }
-", @"serviceCollection.AddSingleton<IPartialClassTest2, PartialClassTest2>();
+",
+@"serviceCollection.AddSingleton<IPartialClassTest2, PartialClassTest2>();
 return serviceCollection;");
+
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
@@ -53,8 +59,10 @@ public class ClassBImplementationFactory : IImplementationFactory<IClassB>
         return new ClassB();
     }
 }
-", @"serviceCollection.AddSingleton(sp => new ClassBImplementationFactory().Factory(sp));
+",
+@"serviceCollection.AddSingleton(sp => new ClassBImplementationFactory().Factory(sp));
 return serviceCollection;");
+
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
@@ -71,9 +79,10 @@ public class ClassBImplementationFactory : IImplementationFactory<ClassB>
     {
         return new ClassB();
     }
-}
-", @"serviceCollection.AddSingleton(sp => new ClassBImplementationFactory().Factory(sp));
+}",
+@"serviceCollection.AddSingleton(sp => new ClassBImplementationFactory().Factory(sp));
 return serviceCollection;");
+
         yield return new TestCaseData(@"
 using using Agoda.IoC.Generator.Abstractions;
 namespace Agoda.IoC.Generator.UnitTests;
@@ -93,9 +102,74 @@ namespace Agoda.IoC.Generator.UnitTests;
         public string GetNameT { get; }
         public string GetNameU { get; }
     }
-", @"serviceCollection.AddSingleton(typeof(IThing<, >), typeof(GenericThing<, >));
+",
+@"serviceCollection.AddSingleton(typeof(IThing<, >), typeof(GenericThing<, >));
+return serviceCollection;");
+
+        // OfCollection case
+        yield return new TestCaseData(@"
+using using Agoda.IoC.Generator.Abstractions;
+namespace Agoda.IoC.Generator.UnitTests;
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 2)]
+public class Pipeline2 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline2);
+    }
+}
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 3)]
+public class Pipeline3 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline2);
+    }
+}
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 1)]
+public class Pipeline1 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline1);
+    }
+}
+public interface IPipeline
+{
+    string Invoke();
+}
+[RegisterSingleton(For = typeof(IMiddleware), OfCollection = true, Order = 3)]
+public class IMiddleware2 : IMiddleware
+{
+    public string Invoke()
+    {
+        return nameof(IMiddleware1);
+    }
+}
+[RegisterSingleton(For = typeof(IMiddleware), OfCollection = true, Order = 1)]
+public class IMiddleware1 : IMiddleware
+{
+    public string Invoke()
+    {
+        return nameof(IMiddleware1);
+    }
+}
+public interface IMiddleware
+{
+    string Invoke();
+}
+
+",
+@"// Of Collection code
+serviceCollection.AddSingleton<IMiddleware, IMiddleware1>();
+serviceCollection.AddSingleton<IMiddleware, IMiddleware2>();
+serviceCollection.AddSingleton<IPipeline, Pipeline1>();
+serviceCollection.AddSingleton<IPipeline, Pipeline2>();
+serviceCollection.AddSingleton<IPipeline, Pipeline3>();
 return serviceCollection;");
     }
+
+
     [Test, TestCaseSource("ContainerRegistrationGeneratorTestDatas")]
     public void Should_Generate_AddSingleton_Correctly(string source, string generatedBodyMethod)
     {

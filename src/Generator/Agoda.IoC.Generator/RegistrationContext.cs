@@ -9,6 +9,8 @@ internal class RegistrationContext
     public bool IsReplaceService { get; set; }
     public bool IsOpenGeneric { get; set; }
     public bool IsUseFactory { get; set; }
+    public bool IsCollection { get; set; }
+    public int Order { get; set; }
     public string ImplementationFactoryCode { get; set; }
 }
 

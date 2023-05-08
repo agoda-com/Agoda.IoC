@@ -4,17 +4,17 @@ namespace Agoda.IoC.Generator;
 
 internal sealed class Constants
 {
-    internal static string TRANSIENT_ATTRIBUTE_NAME = typeof(RegisterTransientAttribute).FullName;
-    internal static string PER_REQUEST_ATTRIBUTE_NAME = typeof(RegisterPerRequestAttribute).FullName;
-    internal static string SCOPED_ATTRIBUTE_NAME = typeof(RegisterScopedAttribute).FullName;
-    internal static string SINGLETON_ATTRIBUTE_NAME = typeof(RegisterSingletonAttribute).FullName;
+    internal static string RegisterTransientAttributeName = typeof(RegisterTransientAttribute).FullName;
+    internal static string RegisterPerRequestAttributeName = typeof(RegisterPerRequestAttribute).FullName;
+    internal static string RegisterScopedAttributeName = typeof(RegisterScopedAttribute).FullName;
+    internal static string RegisterSingletonAttributeName = typeof(RegisterSingletonAttribute).FullName;
 
-    internal static Dictionary<string, RegistrationType> RegistrationTypes = new()
+    internal static Dictionary<string, RegistrationType> AttributeRegistrationTypes = new()
     {
-        [TRANSIENT_ATTRIBUTE_NAME] = RegistrationType.Transient,
-        [SCOPED_ATTRIBUTE_NAME] = RegistrationType.Scoped,
-        [PER_REQUEST_ATTRIBUTE_NAME] = RegistrationType.Scoped,
-        [SINGLETON_ATTRIBUTE_NAME] = RegistrationType.Singleton
+        [RegisterTransientAttributeName] = RegistrationType.Transient,
+        [RegisterScopedAttributeName] = RegistrationType.Scoped,
+        [RegisterPerRequestAttributeName] = RegistrationType.Scoped,
+        [RegisterSingletonAttributeName] = RegistrationType.Singleton
     };
 
     internal const string GENERATE_SINGLETON_SOURCE = "serviceCollection.AddSingleton<{0}>();";

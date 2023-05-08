@@ -89,5 +89,4 @@ public class AgodaIoCGeneratorResultAssertions
             .Be(registrationBody.ReplaceLineEndings().Trim(), $"Method: {methodName}");
         return this;
     }
-
 }
