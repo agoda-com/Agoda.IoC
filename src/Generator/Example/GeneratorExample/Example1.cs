@@ -45,12 +45,10 @@ public class ClassA : IClassA
 {
 }
 
-
 [RegisterScoped(Concrete = false)]
 public class ClassB : IClassA
 {
 }
-
 public interface IClassA { }
 
 
