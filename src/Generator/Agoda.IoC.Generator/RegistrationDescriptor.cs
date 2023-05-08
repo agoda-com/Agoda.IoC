@@ -141,7 +141,6 @@ internal class RegistrationDescriptor
                 } 
                 NameSpaces.Add(_registrationSymbol!.ContainingNamespace.ToDisplayString());
                 RegistrationContexts.Add(registrationContext);
-
             }
             // Implementation class
             else
