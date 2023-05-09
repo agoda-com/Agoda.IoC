@@ -21,7 +21,20 @@ internal class RegistrationDescriptor
         {
             if (!TryGetRegistrationType(registrationAttribute, out var registrationType)) { continue; }
 
-            if (registrationAttribute.NamedArguments is { Length: > 0 })
+
+            if(registrationAttribute.AttributeClass is { } attributeClass && 
+                attributeClass.ToDisplayString().Equals(Constants.RegisterHostedServiceName))
+            {
+
+                var hostedServiceClassName = _registrationSymbol.Name;
+                var registrationContext = new RegistrationContext { 
+                    RegistrationType = RegistrationType.HostedService, 
+                    ConcreteType = hostedServiceClassName 
+                };
+                NameSpaces.Add(_registrationSymbol.ContainingNamespace.ToDisplayString());
+                RegistrationContexts.Add(registrationContext);
+            }
+            else if (registrationAttribute.NamedArguments is { Length: > 0 })
             {
                 var registrationContext = new RegistrationContext { RegistrationType = registrationType };
                 foreach (var namedArguments in registrationAttribute.NamedArguments)
@@ -119,15 +132,15 @@ internal class RegistrationDescriptor
                     registrationContext.ForType = $"{firstInterface.Name}<{comma}>";
                     registrationContext.ConcreteType = $"{_registrationSymbol.Name}<{comma}>";
                     registrationContext.IsOpenGeneric = true;
+                    NameSpaces.Add(firstInterface!.ContainingNamespace.ToDisplayString());
                 }
                 else
                 {
                     registrationContext.ForType = firstInterface.Name;
                     registrationContext.ConcreteType = _registrationSymbol.Name;
-                }
-                NameSpaces.Add(firstInterface!.ContainingNamespace.ToDisplayString());
+                } 
+                NameSpaces.Add(_registrationSymbol!.ContainingNamespace.ToDisplayString());
                 RegistrationContexts.Add(registrationContext);
-
             }
             // Implementation class
             else

@@ -1,6 +1,44 @@
 ﻿using Agoda.IoC.Generator.Abstractions;
+using Microsoft.Extensions.Hosting;
 
 namespace GeneratorExample;
+
+
+[RegisterHostedService] 
+public class TimedHostedService : IHostedService, IDisposable
+{
+    private int executionCount = 0;
+    private Timer? _timer = null;
+
+    public TimedHostedService() { }
+
+    public Task StartAsync(CancellationToken stoppingToken)
+    {
+
+        _timer = new Timer(DoWork, null, TimeSpan.Zero,
+            TimeSpan.FromSeconds(5));
+
+        return Task.CompletedTask;
+    }
+
+    private void DoWork(object? state)
+    {
+        var count = Interlocked.Increment(ref executionCount);
+    }
+
+    public Task StopAsync(CancellationToken stoppingToken)
+    {
+        _timer?.Change(Timeout.Infinite, 0);
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+}
+
+
 
 [RegisterScoped(Concrete = true)]
 public class ClassA : IClassA

@@ -69,7 +69,8 @@ internal sealed partial class AgodaIoCGenerator : IIncrementalGenerator
             compilation.GetTypeByMetadataName(Constants.RegisterTransientAttributeName),
             compilation.GetTypeByMetadataName(Constants.RegisterPerRequestAttributeName),
             compilation.GetTypeByMetadataName(Constants.RegisterScopedAttributeName),
-            compilation.GetTypeByMetadataName(Constants.RegisterSingletonAttributeName)
+            compilation.GetTypeByMetadataName(Constants.RegisterSingletonAttributeName),
+            compilation.GetTypeByMetadataName(Constants.RegisterHostedServiceName)
         };
 
         if (registrationAttributeTypeSymbols.Any(x => x is null)) { return; }

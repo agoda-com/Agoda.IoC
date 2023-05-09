@@ -16,6 +16,8 @@ internal static class SourceEmitter
                 { RegistrationType: RegistrationType.Singleton } singleton => BuildSingletonRegistrationCode(singleton),
                 { RegistrationType: RegistrationType.Scoped } scopeRegister => BuildScopedRegistrationCode(scopeRegister),
                 { RegistrationType: RegistrationType.Transient } transient => BuildTransientRegistrationCode(transient),
+                { RegistrationType: RegistrationType.HostedService } hostedService => BuildHostedServiceRegistrationCode(hostedService),
+
                 _ => string.Empty
             };
 
@@ -26,6 +28,11 @@ internal static class SourceEmitter
         }
 
         return codes.ToString();
+    }
+
+    private static string BuildHostedServiceRegistrationCode(RegistrationContext hostedService)
+    {
+        return string.Format(Constants.GENERATE_HOSTED_SERVICE_SOURCE, hostedService.ConcreteType);
     }
 
     private static string BuildSingletonRegistrationCode(RegistrationContext singleton)

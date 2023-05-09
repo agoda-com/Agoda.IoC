@@ -8,13 +8,15 @@ internal sealed class Constants
     internal static string RegisterPerRequestAttributeName = typeof(RegisterPerRequestAttribute).FullName;
     internal static string RegisterScopedAttributeName = typeof(RegisterScopedAttribute).FullName;
     internal static string RegisterSingletonAttributeName = typeof(RegisterSingletonAttribute).FullName;
+    internal static string RegisterHostedServiceName = typeof(RegisterHostedServiceAttribute).FullName;
 
     internal static Dictionary<string, RegistrationType> AttributeRegistrationTypes = new()
     {
         [RegisterTransientAttributeName] = RegistrationType.Transient,
         [RegisterScopedAttributeName] = RegistrationType.Scoped,
         [RegisterPerRequestAttributeName] = RegistrationType.Scoped,
-        [RegisterSingletonAttributeName] = RegistrationType.Singleton
+        [RegisterSingletonAttributeName] = RegistrationType.Singleton,
+        [RegisterHostedServiceName] = RegistrationType.HostedService
     };
 
     internal const string GENERATE_SINGLETON_SOURCE = "serviceCollection.AddSingleton<{0}>();";
