@@ -110,7 +110,7 @@ serviceCollection.AddSingleton(typeof(DoWork<>));
 return serviceCollection;
 ")]
 
-    public void Should_Generate_With_First_interface_Correctly(string source, string generatedBodyMethod)
+    public void Should_Generate_With_Typof_Correctly(string source, string generatedBodyMethod)
     {
         TestHelper.GenerateAgodaIoC(source)
                 .Should()
@@ -119,6 +119,35 @@ return serviceCollection;
                 .HaveMethodBody("Register", generatedBodyMethod);
     }
 
+    [TestCase(
+    @"using using Agoda.IoC.Generator.Abstractions;
+namespace Agoda.IoC.Generator.UnitTests;
 
+[RegisterSingleton]
+public class GenericeDoWork<T> : IDoWork<T> where T : new ()
+{
+
+    public T Process()
+    {
+        return new T();
+    }
+}
+public interface IDoWork<T> where T : new()
+{
+    T Process();
+}
+",
+    @"serviceCollection.AddSingleton(typeof(IDoWork<>), typeof(GenericeDoWork<>));
+return serviceCollection;
+")]
+
+    public void Should_Generate_With_First_interface_Correctly(string source, string generatedBodyMethod)
+    {
+        TestHelper.GenerateAgodaIoC(source)
+                .Should()
+                .HaveMethodCount(2)
+                .HaveMethods("Register", "RegisterFromAgodaIoCGeneratorUnitTests")
+                .HaveMethodBody("Register", generatedBodyMethod);
+    }
 
 }

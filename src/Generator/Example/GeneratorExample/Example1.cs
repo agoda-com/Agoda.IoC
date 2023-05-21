@@ -126,3 +126,17 @@ public class DoWork<T> where T : new()
         return new T();
     }
 }
+
+[RegisterSingleton]
+public class GenericeDoWork<T> : IDoWork<T> where T : new ()
+{
+
+    public T Process()
+    {
+        return new T();
+    }
+}
+public interface IDoWork<T> where T : new()
+{
+    T Process();
+}
