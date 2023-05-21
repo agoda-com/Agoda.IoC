@@ -1,10 +1,11 @@
 ﻿using Agoda.IoC.Generator.Abstractions;
+using GeneratorExample.Interfaces;
 using Microsoft.Extensions.Hosting;
 
 namespace GeneratorExample;
 
 
-[RegisterHostedService] 
+[RegisterHostedService]
 public class TimedHostedService : IHostedService, IDisposable
 {
     private int executionCount = 0;
@@ -40,7 +41,7 @@ public class TimedHostedService : IHostedService, IDisposable
 
 
 
-[RegisterScoped(Concrete = true)]
+[RegisterScoped]
 public class ClassA : IClassA
 {
 }
@@ -49,7 +50,7 @@ public class ClassA : IClassA
 public class ClassB : IClassA
 {
 }
-public interface IClassA { }
+
 
 
 [RegisterSingleton(Factory = typeof(ClassBImplementationFactory))]
@@ -96,27 +97,25 @@ public interface IPipeline
     string Invoke();
 }
 [RegisterSingleton(For = typeof(IMiddleware), OfCollection = true, Order = 3)]
-public class IMiddleware2 : IMiddleware
+public class Middleware2 : IMiddleware
 {
     public string Invoke()
     {
-        return nameof(IMiddleware1);
+        return nameof(Middleware2);
     }
 }
 [RegisterSingleton(For = typeof(IMiddleware), OfCollection = true, Order = 5)]
-public class IMiddleware1 : IMiddleware
+public class Middleware1 : IMiddleware
 {
     public string Invoke()
     {
-        return nameof(IMiddleware1);
+        return nameof(Middleware1);
     }
 }
 public interface IMiddleware
 {
     string Invoke();
 }
-
-
 
 
 [RegisterSingleton]

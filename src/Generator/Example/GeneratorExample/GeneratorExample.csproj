@@ -14,7 +14,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
 
 		<ProjectReference Include="..\..\Agoda.IoC.Generator.Abstractions\Agoda.IoC.Generator.Abstractions.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
-		<ProjectReference Include="..\..\Agoda.IoC.Generator\Agoda.IoC.Generator.csproj"  OutputItemType="Analyzer" ReferenceOutputAssembly="true"/>
+		<ProjectReference Include="..\..\Agoda.IoC.Generator\Agoda.IoC.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
 	</ItemGroup>
 
 </Project>
