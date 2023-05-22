@@ -128,7 +128,7 @@ public class DoWork<T> where T : new()
 }
 
 [RegisterSingleton]
-public class GenericeDoWork<T> : IDoWork<T> where T : new ()
+public class GenericDoWork<T> : IDoWork<T> where T : new ()
 {
 
     public T Process()

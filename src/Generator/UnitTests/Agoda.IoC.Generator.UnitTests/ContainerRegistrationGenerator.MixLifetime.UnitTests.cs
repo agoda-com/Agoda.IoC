@@ -110,7 +110,7 @@ serviceCollection.AddSingleton(typeof(DoWork<>));
 return serviceCollection;
 ")]
 
-    public void Should_Generate_With_Typof_Correctly(string source, string generatedBodyMethod)
+    public void Should_Generate_With_TypeOf_Correctly(string source, string generatedBodyMethod)
     {
         TestHelper.GenerateAgodaIoC(source)
                 .Should()
