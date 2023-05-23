@@ -131,14 +131,14 @@ internal class RegistrationDescriptor
                     var comma = new string(',', firstInterface.TypeArguments.Length - 1);
                     registrationContext.ForType = $"{firstInterface.Name}<{comma}>";
                     registrationContext.ConcreteType = $"{_registrationSymbol.Name}<{comma}>";
-                    registrationContext.IsOpenGeneric = true;
-                    NameSpaces.Add(firstInterface!.ContainingNamespace.ToDisplayString());
+                    registrationContext.IsOpenGeneric = true;                    
                 }
                 else
                 {
                     registrationContext.ForType = firstInterface.Name;
                     registrationContext.ConcreteType = _registrationSymbol.Name;
-                } 
+                }
+                NameSpaces.Add(firstInterface!.ContainingNamespace.ToDisplayString());
                 NameSpaces.Add(_registrationSymbol!.ContainingNamespace.ToDisplayString());
                 RegistrationContexts.Add(registrationContext);
             }
