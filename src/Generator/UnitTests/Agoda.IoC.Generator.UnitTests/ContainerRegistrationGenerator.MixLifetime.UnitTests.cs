@@ -124,7 +124,7 @@ return serviceCollection;
 namespace Agoda.IoC.Generator.UnitTests;
 
 [RegisterSingleton]
-public class GenericeDoWork<T> : IDoWork<T> where T : new ()
+public class GenericDoWork<T> : IDoWork<T> where T : new ()
 {
 
     public T Process()
@@ -137,7 +137,7 @@ public interface IDoWork<T> where T : new()
     T Process();
 }
 ",
-    @"serviceCollection.AddSingleton(typeof(IDoWork<>), typeof(GenericeDoWork<>));
+    @"serviceCollection.AddSingleton(typeof(IDoWork<>), typeof(GenericDoWork<>));
 return serviceCollection;
 ")]
 
