@@ -3,13 +3,17 @@
 ![Nuget](https://img.shields.io/nuget/v/agoda.ioc.netcore)
 ![Codecov](https://img.shields.io/codecov/c/github/agoda-com/agoda.ioc)
 
-C# IoC extension library, used at Agoda for Registration of classes into IoC container based on Attributes. 
+C# IoC extension library, used at Agoda for Registration of classes into IoC container based on Attributes.
 
 ## The Problem?
 
 In some of our larger projects at Agoda, the Dependency injection registration was done in a single or set of "configuration" classes. These large configuration type files are troublesome due to frequency of merge conflicts. Also to look at a normal class and know if it will be run as a singleton or transient you need to dig into these configuration classes.
 
 By declaring the IoC configuration at the top of each class in an attribute it makes it immediately clear to the developer what the class's lifecycle is when running, and avoids large complex configuration classes that are prone to merge conflicts.
+
+# Agoda IoC Generator Documentation
+![Nuget](https://img.shields.io/nuget/v/agoda.ioc.generator)
+The documentation is available [here](./doc/Generator.md).
 
 ## Adding to your project
 
@@ -18,6 +22,7 @@ Install the package, then add to your Startup like below.
 ```powershell
 Install-Package Agoda.IoC.NetCore
 ```
+
 
 ```csharp
         public void ConfigureServices(IServiceCollection services)
