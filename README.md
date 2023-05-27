@@ -13,7 +13,7 @@ By declaring the IoC configuration at the top of each class in an attribute it m
 
 # Agoda IoC Generator Documentation
 ![Nuget](https://img.shields.io/nuget/v/agoda.ioc.generator)
-The documentation is available [here](./doc/Generator.md).
+The documentation is available [here](Generator.md).
 
 ## Adding to your project
 

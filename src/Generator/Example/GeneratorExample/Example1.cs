@@ -127,7 +127,7 @@ public class DoWork<T> where T : new()
     }
 }
 
-[RegisterSingleton]
+[RegisterSingleton(For = typeof(IDoWork<>))]
 public class GenericDoWork<T> : IDoWork<T> where T : new ()
 {
 
