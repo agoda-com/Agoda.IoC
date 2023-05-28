@@ -7,7 +7,7 @@ All you need to do, to install Agoda.Ioc.Generator is to add a NuGet reference p
 ## PackageReference
 
 ``` xml
-<PackageReference Include="Agoda.Ioc.Generator" Version="1.1.128"  PrivateAssets="all" />
+<PackageReference Include="Agoda.Ioc.Generator" Version="1.1.128"   />
 ```
 
 ## .NET CLI
@@ -16,14 +16,10 @@ All you need to do, to install Agoda.Ioc.Generator is to add a NuGet reference p
 dotnet add package Agoda.Ioc.Generator --version 1.1.128
 ```
 
-**Note:** if you are using the .NET CLI. Please open `*.csproj` and add PrivateAssets="all" on PackageReference Include="Agoda.Ioc.Generator" Version="1.1.128" /> 
-
-**Note:** Please install the "Microsoft.Extensions.DependencyInjection.Abstractions" package if your project is not an asp.net project.
-
-``` cmd
-dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions --version 7.0.0
-// or
-<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+**Note:** if you don't need a transitive dependency.please add PrivateAssets="all" on PackageReference Include="Agoda.Ioc.Generator" Version="1.1.128" />
+example
+``` xml
+<PackageReference Include="Agoda.Ioc.Generator" Version="1.1.128" PrivateAssets="all" />
 ```
 
 ## Usage in your project
@@ -333,24 +329,11 @@ You just need to call extension method in entry project like this
 
 ``` csharp
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.RegisterFromAgodaExample(); // Here 😃 
-
+...
+builder.Services.RegisterFromAgodaExample(); // Here 😃
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
+...
 app.Run();
 ```
 
-Enjoy coding :) 
+Enjoy coding 😃

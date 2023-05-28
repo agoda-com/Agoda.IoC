@@ -84,6 +84,42 @@ It can also be used to register multiple instances
     [RegisterSingleton(For = typeof(IMultipleAttributes2))]
     public class MultipleAttributes : IMultipleAttributes1, IMultipleAttributes2 {}
 ```
+Additionally, it may be used to assign an attribute order and register many instances as a collection.
+``` csharp
+
+
+namespace Agoda.Example;
+
+public interface IPipeline
+{
+    string Invoke();
+}
+
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 2)]
+public class Pipeline2 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline2);
+    }
+}
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 3)]
+public class Pipeline3 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline2);
+    }
+}
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 1)]
+public class Pipeline1 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline1);
+    }
+}
+```
 ## Keyed Registration
 
 
