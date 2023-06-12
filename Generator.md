@@ -7,19 +7,19 @@ All you need to do, to install Agoda.Ioc.Generator is to add a NuGet reference p
 ## PackageReference
 
 ``` xml
-<PackageReference Include="Agoda.Ioc.Generator" Version="1.1.128"   />
+<PackageReference Include="Agoda.Ioc.Generator" Version="version"   />
 ```
 
 ## .NET CLI
 
 ``` powershell
-dotnet add package Agoda.Ioc.Generator --version 1.1.128
+dotnet add package Agoda.Ioc.Generator 
 ```
 
-**Note:** if you don't need a transitive dependency.please add PrivateAssets="all" on PackageReference Include="Agoda.Ioc.Generator" Version="1.1.128" />
+**Note:** if you don't need a transitive dependency.please add PrivateAssets="all" on PackageReference Include="Agoda.Ioc.Generator" Version="xxx" />
 example
 ``` xml
-<PackageReference Include="Agoda.Ioc.Generator" Version="1.1.128" PrivateAssets="all" />
+<PackageReference Include="Agoda.Ioc.Generator" Version="version" PrivateAssets="all" />
 ```
 
 ## Usage in your project
