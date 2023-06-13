@@ -3,13 +3,17 @@
 ![Nuget](https://img.shields.io/nuget/v/agoda.ioc.netcore)
 ![Codecov](https://img.shields.io/codecov/c/github/agoda-com/agoda.ioc)
 
-C# IoC extension library, used at Agoda for Registration of classes into IoC container based on Attributes. 
+C# IoC extension library, used at Agoda for Registration of classes into IoC container based on Attributes.
 
 ## The Problem?
 
 In some of our larger projects at Agoda, the Dependency injection registration was done in a single or set of "configuration" classes. These large configuration type files are troublesome due to frequency of merge conflicts. Also to look at a normal class and know if it will be run as a singleton or transient you need to dig into these configuration classes.
 
 By declaring the IoC configuration at the top of each class in an attribute it makes it immediately clear to the developer what the class's lifecycle is when running, and avoids large complex configuration classes that are prone to merge conflicts.
+
+# Agoda IoC Generator Documentation
+![Nuget](https://img.shields.io/nuget/v/agoda.ioc.generator)
+The documentation is available [here](Generator.md).
 
 ## Adding to your project
 
@@ -18,6 +22,7 @@ Install the package, then add to your Startup like below.
 ```powershell
 Install-Package Agoda.IoC.NetCore
 ```
+
 
 ```csharp
         public void ConfigureServices(IServiceCollection services)
@@ -78,6 +83,42 @@ It can also be used to register multiple instances
     [RegisterSingleton(For = typeof(IMultipleAttributes1))]
     [RegisterSingleton(For = typeof(IMultipleAttributes2))]
     public class MultipleAttributes : IMultipleAttributes1, IMultipleAttributes2 {}
+```
+Additionally, it may be used to assign an attribute order and register many instances as a collection.
+``` csharp
+
+
+namespace Agoda.Example;
+
+public interface IPipeline
+{
+    string Invoke();
+}
+
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 2)]
+public class Pipeline2 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline2);
+    }
+}
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 3)]
+public class Pipeline3 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline2);
+    }
+}
+[RegisterSingleton(For = typeof(IPipeline), OfCollection = true, Order = 1)]
+public class Pipeline1 : IPipeline
+{
+    public string Invoke()
+    {
+        return nameof(Pipeline1);
+    }
+}
 ```
 ## Keyed Registration
 
