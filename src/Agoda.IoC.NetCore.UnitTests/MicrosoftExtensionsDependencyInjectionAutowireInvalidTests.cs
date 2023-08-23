@@ -32,6 +32,8 @@ namespace Agoda.IoC.NetCore.UnitTests
             {
                 registrationFailedException.RegistrationContextExceptions.Count.ShouldBe(1);
                 registrationFailedException.RegistrationContextExceptions[0].Message.ShouldContain("AmbiguousRegistration");
+                registrationFailedException.RegistrationContextExceptions[0].RegistrationContext.ShouldNotBeNull();
+                registrationFailedException.RegistrationContextExceptions[0].RegistrationContext.Validation.IsValid.ShouldBeFalse();
             }
         }
     }
