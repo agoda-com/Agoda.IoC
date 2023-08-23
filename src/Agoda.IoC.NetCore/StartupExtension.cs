@@ -50,9 +50,9 @@ namespace Agoda.IoC.NetCore
                 ))
                 .ToList();
 
-            if (!Validate(registrations, containerRegistrationOption))
+            if (!Validate(registrations, containerRegistrationOption, out var errors))
             {
-                throw new RegistrationFailedException("There are validations error!!!");
+                throw new RegistrationFailedException("There are validations errors, please see RegistrationContextExceptions Property for details", errors);
             }
 
             foreach (var reg in registrations)
@@ -151,19 +151,19 @@ namespace Agoda.IoC.NetCore
             }
         }
 
-        private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption containerRegistrationOption)
+        private static bool Validate(List<RegistrationContext> registrations, ContainerRegistrationOption containerRegistrationOption, out List<RegistrationContextException> errors)
         {
-            bool isValid = true;
-            registrations.ForEach(reg =>
+            var isValid = true;
+            errors = new List<RegistrationContextException>();
+            foreach (var registration in registrations.Where(registration => !registration.Validation.IsValid))
             {
-                if (!reg.Validation.IsValid)
-                {
-                    isValid = false;
-                    containerRegistrationOption
-                        .OnRegistrationContextException?
-                        .Invoke(new RegistrationContextException(reg, reg.Validation.ErrorMessage));
-                }
-            });
+                isValid = false;
+                var exception = new RegistrationContextException(registration, registration.Validation.ErrorMessage);
+                errors.Add(exception);
+                containerRegistrationOption
+                    .OnRegistrationContextException?
+                    .Invoke(exception);
+            }
             return isValid;
         }
     }
