@@ -20,10 +20,5 @@ namespace Agoda.IoC.Core
         {
             _registrationContextExceptions = errors;
         }
-
-        private RegistrationFailedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 }
