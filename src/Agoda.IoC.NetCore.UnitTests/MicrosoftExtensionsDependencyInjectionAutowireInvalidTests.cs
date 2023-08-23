@@ -1,7 +1,9 @@
-﻿using Agoda.IoC.Core;
+﻿using System;
+using Agoda.IoC.Core;
 using Agoda.IoC.ProjectUnderTest.Invalid12;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Shouldly;
 
 namespace Agoda.IoC.NetCore.UnitTests
 {
@@ -19,6 +21,18 @@ namespace Agoda.IoC.NetCore.UnitTests
             {
                 options.OnRegistrationContextException = exception => { };
             }));
+            try
+            {
+                container.AutoWireAssembly(new[]
+                {
+                    typeof(AmbiguousRegistration).Assembly
+                }, false);
+            }
+            catch (RegistrationFailedException registrationFailedException)
+            {
+                registrationFailedException.RegistrationContextExceptions.Count.ShouldBe(1);
+                registrationFailedException.RegistrationContextExceptions[0].Message.ShouldContain("AmbiguousRegistration");
+            }
         }
     }
 }
