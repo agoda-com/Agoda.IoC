@@ -129,7 +129,7 @@ namespace Agoda.IoC.NetCore
             }
         }
 
-        private static void RegisterKeyedFactory(this IServiceCollection services, IDictionary<Type, List<KeyTypePair>> keysForTypes)
+        public static void RegisterKeyedFactory(this IServiceCollection services, IDictionary<Type, List<KeyTypePair>> keysForTypes)
         {
             foreach (var key in keysForTypes)
             {
