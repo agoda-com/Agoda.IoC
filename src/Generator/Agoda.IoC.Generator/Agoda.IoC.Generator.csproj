@@ -36,4 +36,7 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="$(AssemblyName).UnitTests" />
 	</ItemGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+	</ItemGroup>
 </Project>
